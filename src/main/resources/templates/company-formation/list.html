@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Company Formation')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('company-formation')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Company Formation')}"></header>
+
+        <main class="content">
+
+            <div class="auth-alert info" th:if="${successMessage}">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${successMessage}">Saved</span>
+            </div>
+
+            <!-- Page header card -->
+            <section class="page-header-card">
+                <div class="page-header-row">
+                    <div>
+                        <h1 class="page-title">Company Formation</h1>
+                        <p class="page-sub">Fast, compliant and hassle-free company formation services.</p>
+                    </div>
+                    <a th:href="@{/company-formation/new}" class="btn-primary-navy">
+                        <i class="bi bi-plus-lg"></i> New Formation Enquiry
+                    </a>
+                </div>
+
+                <div class="mini-kpi-row cols-6">
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Total Enquiries</p>
+                            <p class="mini-kpi-value">68</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+14 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-green"><i class="bi bi-clipboard2-check-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">In Progress</p>
+                            <p class="mini-kpi-value">28</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+7 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-amber"><i class="bi bi-check-circle-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Completed <span style="font-weight:400;color:#8494AC;">(Month)</span></p>
+                            <p class="mini-kpi-value">22</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+5 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-violet"><i class="bi bi-building"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Companies Formed <span style="font-weight:400;color:#8494AC;">(Year)</span></p>
+                            <p class="mini-kpi-value">146</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+18.2% vs last year</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-clock-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Avg. Formation Time</p>
+                            <p class="mini-kpi-value">3.2 Days</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">-0.6 days vs last month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon" style="background:#E4F7F5;color:#14B8A6;"><i class="bi bi-pie-chart-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Success Rate</p>
+                            <p class="mini-kpi-value">96%</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+2% vs last month</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Main grid: filters / table / right rail -->
+            <section class="bk-grid">
+
+                <!-- Filters -->
+                <aside class="filters-card">
+                    <div class="filters-head"><i class="bi bi-funnel-fill"></i> Filters</div>
+
+                    <form id="filtersForm" method="get" th:action="@{/company-formation}">
+                        <div class="field-block">
+                            <label for="f-source">Enquiry Source</label>
+                            <select id="f-source" name="source">
+                                <option value="">All Sources</option>
+                                <option th:each="s : ${sources}" th:value="${s}" th:text="${s.label}"
+                                        th:selected="${s == filter.source}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-type">Company Type</label>
+                            <select id="f-type" name="companyType">
+                                <option value="">All Types</option>
+                                <option th:each="t : ${companyTypes}" th:value="${t}" th:text="${t}"
+                                        th:selected="${t == filter.companyType}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-status">Status</label>
+                            <select id="f-status" name="status">
+                                <option value="">All Status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"
+                                        th:selected="${s == filter.status}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-jurisdiction">Jurisdiction</label>
+                            <select id="f-jurisdiction" name="jurisdiction">
+                                <option value="">All Jurisdictions</option>
+                                <option th:each="j : ${jurisdictions}" th:value="${j}" th:text="${j}"
+                                        th:selected="${j == filter.jurisdiction}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label>Date Range</label>
+                            <input type="date" name="dateFrom" th:value="${filter.dateFrom}" style="margin-bottom:8px;"/>
+                            <input type="date" name="dateTo" th:value="${filter.dateTo}"/>
+                        </div>
+
+                        <button type="submit" class="btn-apply">Apply Filters</button>
+                        <a th:href="@{/company-formation}" class="btn-reset">Reset</a>
+                    </form>
+                </aside>
+
+                <!-- Table -->
+                <div class="jobs-table-card">
+                    <div class="jobs-table-head">
+                        <h2>Company Formation Progress</h2>
+                        <div class="search-box">
+                            <input type="search" name="q" form="filtersForm" placeholder="Search by company name or client..." th:value="${filter.q}"/>
+                            <i class="bi bi-search"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table class="jobs-table">
+                            <thead>
+                                <tr>
+                                    <th>Client / Business</th>
+                                    <th>Company Name</th>
+                                    <th>Company Type</th>
+                                    <th class="fy-col">Jurisdiction</th>
+                                    <th>Stage</th>
+                                    <th>Status</th>
+                                    <th>Enquiry Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="enq, it : ${enquiries}">
+                                    <td>
+                                        <div class="client-cell">
+                                            <span class="client-avatar" th:classappend="'avatar-tint-' + ${it.index % 5}"
+                                                  th:text="${enq.initials}">JM</span>
+                                            <span class="client-info">
+                                                <span class="client-name" th:text="${enq.clientName}">Client</span>
+                                                <span class="client-ref" th:text="${enq.enquiryRef}">ENQ-1001</span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td th:text="${enq.companyName}">Company Name Ltd</td>
+                                    <td th:text="${enq.companyType}">Private Limited</td>
+                                    <td class="fy-col" th:text="${enq.jurisdiction}">UK</td>
+                                    <td>
+                                        <span class="status-pill" th:classappend="'pill-' + ${enq.stage}" th:text="${enq.stage.label}">Stage</span>
+                                    </td>
+                                    <td>
+                                        <span class="status-pill" th:classappend="'pill-' + ${enq.status}" th:text="${enq.status.label}">Status</span>
+                                    </td>
+                                    <td th:text="${enq.enquiryDateLabel}">08 Aug 2025</td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <a th:href="@{/company-formation/{id}(id=${enq.id})}" class="row-action-btn" title="View"><i class="bi bi-eye"></i></a>
+                                            <a th:href="@{/company-formation/{id}/edit(id=${enq.id})}" class="row-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                                            <button type="button" class="row-action-btn" title="More (coming soon)"><i class="bi bi-three-dots-vertical"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(enquiries)}">
+                                    <td colspan="8" class="empty-row">No formation enquiries match these filters.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-footer">
+                        <span class="showing-text" th:if="${page.totalElements > 0}">
+                            Showing <span th:text="${page.number * page.size + 1}">1</span>
+                            to <span th:text="${page.number * page.size + enquiries.size()}">6</span>
+                            of <span th:text="${page.totalElements}">68</span> entries
+                        </span>
+                        <span class="showing-text" th:unless="${page.totalElements > 0}">No entries</span>
+
+                        <nav class="pagination" th:if="${page.totalPages > 1}">
+                            <a th:href="@{/company-formation(source=${filter.source},companyType=${filter.companyType},status=${filter.status},jurisdiction=${filter.jurisdiction},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=0)}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&laquo;</a>
+                            <a th:href="@{/company-formation(source=${filter.source},companyType=${filter.companyType},status=${filter.status},jurisdiction=${filter.jurisdiction},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.number - 1})}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&lsaquo;</a>
+
+                            <a th:each="p : ${#numbers.sequence(0, page.totalPages - 1)}"
+                               th:href="@{/company-formation(source=${filter.source},companyType=${filter.companyType},status=${filter.status},jurisdiction=${filter.jurisdiction},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${p})}"
+                               class="page-btn" th:classappend="${p == page.number} ? ' active'"
+                               th:text="${p + 1}">1</a>
+
+                            <a th:href="@{/company-formation(source=${filter.source},companyType=${filter.companyType},status=${filter.status},jurisdiction=${filter.jurisdiction},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.number + 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&rsaquo;</a>
+                            <a th:href="@{/company-formation(source=${filter.source},companyType=${filter.companyType},status=${filter.status},jurisdiction=${filter.jurisdiction},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.totalPages - 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&raquo;</a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Right rail -->
+                <aside class="right-rail">
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Company Formation Overview <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3></div>
+                        <div class="overview-body">
+                            <div class="overview-pie-wrap" style="width:125px;height:125px;">
+                                <canvas id="formationOverviewDonut"></canvas>
+                                <div class="donut-center">
+                                    <span class="donut-center-value" style="font-size:22px;">146</span>
+                                    <span class="donut-center-label">Total</span>
+                                </div>
+                            </div>
+                            <ul class="expense-legend">
+                                <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">Incorporation</span><span class="leg-amount">58 (39.7%)</span></li>
+                                <li><span class="dot" style="background:#14B8A6;"></span><span class="leg-label">Name Reservation</span><span class="leg-amount">28 (19.2%)</span></li>
+                                <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">Documents</span><span class="leg-amount">22 (15.1%)</span></li>
+                                <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">Review</span><span class="leg-amount">18 (12.3%)</span></li>
+                                <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">Completed</span><span class="leg-amount">20 (13.7%)</span></li>
+                            </ul>
+                        </div>
+                        <a href="#" class="see-all-link" style="display:block;text-align:center;margin-top:10px;padding-top:12px;border-top:1px solid #F2F5FA;">View detailed report <i class="bi bi-arrow-right"></i></a>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Quick Actions</h3></div>
+                        <ul class="quick-actions">
+                            <li><a href="#"><i class="bi bi-file-earmark-plus-fill"></i> New Formation Enquiry <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-search"></i> Company Name Availability Check <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-magic"></i> Incorporation Package Wizard <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-cloud-upload-fill"></i> Upload Documents <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-geo-alt-fill"></i> Track Application <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-list-ul"></i> View All Companies <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Upcoming Tasks</h3><a href="#" class="head-link">View Calendar</a></div>
+                        <ul class="deadline-list">
+                            <li>
+                                <span class="date-chip" style="width:36px;height:36px;background:#E8F0FE;color:#2E5BFF;"><span class="chip-day" style="font-size:14px;">12</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Document Review</span>
+                                    <span class="deadline-sub">John Miller</span>
+                                </span>
+                                <span class="deadline-pill" style="background:#E8F0FE;color:#2E5BFF;">In 2 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip" style="width:36px;height:36px;background:#E6F6EC;color:#16A34A;"><span class="chip-day" style="font-size:14px;">14</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Incorporation Filing</span>
+                                    <span class="deadline-sub">GreenBite Café Ltd</span>
+                                </span>
+                                <span class="deadline-pill" style="background:#E6F6EC;color:#16A34A;">In 4 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-violet" style="width:36px;height:36px;"><span class="chip-day" style="font-size:14px;">16</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Name Reservation Expiry</span>
+                                    <span class="deadline-sub">AK Consultancy Ltd</span>
+                                </span>
+                                <span class="deadline-pill pill-violet">In 6 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-amber" style="width:36px;height:36px;"><span class="chip-day" style="font-size:14px;">20</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Information Request</span>
+                                    <span class="deadline-sub">Bright Learning Academy Ltd</span>
+                                </span>
+                                <span class="deadline-pill pill-amber">In 10 days</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="see-all-link"><i class="bi bi-plus"></i> View all tasks <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- Bottom row: 3 cards -->
+            <section class="fr-bottom-row">
+                <article class="bk-expense-card">
+                    <h3>Formation Trend <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <div class="revenue-canvas-wrap" style="height:170px;"><canvas id="formationTrendChart"></canvas></div>
+                    <div class="stat-box-row">
+                        <div class="stat-box">
+                            <p class="stat-box-label">Total Enquiries</p>
+                            <p class="stat-box-value">68</p>
+                        </div>
+                        <div class="stat-box">
+                            <p class="stat-box-label">Companies Formed</p>
+                            <p class="stat-box-value">146</p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Companies by Type <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <div class="expense-body">
+                        <div class="expense-donut-wrap" style="width:125px;height:125px;"><canvas id="typeDonut"></canvas></div>
+                        <ul class="expense-legend">
+                            <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">Private Limited</span><span class="leg-amount">104</span><span class="leg-pct">71.2%</span></li>
+                            <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">Ltd by Guarantee</span><span class="leg-amount">18</span><span class="leg-pct">12.3%</span></li>
+                            <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">LLP</span><span class="leg-amount">12</span><span class="leg-pct">8.2%</span></li>
+                            <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">Public Limited</span><span class="leg-amount">8</span><span class="leg-pct">5.5%</span></li>
+                            <li><span class="dot" style="background:#14B8A6;"></span><span class="leg-label">Others</span><span class="leg-amount">4</span><span class="leg-pct">2.8%</span></li>
+                        </ul>
+                    </div>
+                    <div class="expense-total">Total Companies <b>146</b></div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Top Jurisdictions <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <ul class="service-list">
+                        <li>
+                            <span class="service-label" style="flex-basis:60px;">UK</span>
+                            <span class="service-track"><span class="service-fill" style="width:88%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">128 (87.7%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:60px;">Ireland</span>
+                            <span class="service-track"><span class="service-fill" style="width:4%;background:#22C55E;"></span></span>
+                            <span class="service-pct">6 (4.1%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:60px;">USA</span>
+                            <span class="service-track"><span class="service-fill" style="width:3%;background:#14B8A6;"></span></span>
+                            <span class="service-pct">5 (3.4%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:60px;">UAE</span>
+                            <span class="service-track"><span class="service-fill" style="width:3%;background:#22C55E;"></span></span>
+                            <span class="service-pct">4 (2.7%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:60px;">Others</span>
+                            <span class="service-track"><span class="service-fill" style="width:2%;background:#3730A3;"></span></span>
+                            <span class="service-pct">3 (2.1%)</span>
+                        </li>
+                    </ul>
+                    <div class="expense-total">Total Companies <b>146</b></div>
+                </article>
+            </section>
+
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/webjars/chart.js/4.4.4/dist/chart.umd.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/company-formation.js}"></script>
+</body>
+</html>

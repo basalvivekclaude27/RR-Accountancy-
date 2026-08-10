@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Corporate Tax')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('corporation-tax')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Corporate Tax')}"></header>
+
+        <main class="content">
+
+            <div class="auth-alert info" th:if="${successMessage}">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${successMessage}">Saved</span>
+            </div>
+
+            <!-- Page header card: no title/sub on this screen, per spec -->
+            <section class="page-header-card">
+                <div class="page-header-row" style="justify-content:flex-end;">
+                    <a th:href="@{/corporation-tax/new}" class="btn-primary-navy">
+                        <i class="bi bi-plus-lg"></i> New Corporate Tax Enquiry
+                    </a>
+                </div>
+
+                <div class="mini-kpi-row cols-6">
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Total Clients</p>
+                            <p class="mini-kpi-value">78</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+10 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-green"><i class="bi bi-file-earmark-check-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">CT Returns Filed <span style="font-weight:400;color:#8494AC;">(Year)</span></p>
+                            <p class="mini-kpi-value">65</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+8 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-amber"><i class="bi bi-currency-pound"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Corporation Tax Payable</p>
+                            <p class="mini-kpi-value">£156,820</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+12.8% vs last year</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-violet"><i class="bi bi-piggy-bank-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Tax Saved <span style="font-weight:400;color:#8494AC;">(Year)</span></p>
+                            <p class="mini-kpi-value">£32,450</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+14.7% vs last year</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-clock-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Avg. Processing Time</p>
+                            <p class="mini-kpi-value">5.4 Days</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">-1.3 days vs last month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon" style="background:#E4F7F5;color:#14B8A6;"><i class="bi bi-pie-chart-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">In Progress</p>
+                            <p class="mini-kpi-value">14</p>
+                            <p class="mini-kpi-foot"><a href="#" style="color:#2E5BFF;">View details</a></p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Main grid: filters / table / right rail -->
+            <section class="bk-grid">
+
+                <!-- Filters -->
+                <aside class="filters-card">
+                    <div class="filters-head"><i class="bi bi-funnel-fill"></i> Filters</div>
+
+                    <form id="filtersForm" method="get" th:action="@{/corporation-tax}">
+                        <div class="field-block">
+                            <label>Accounting Period</label>
+                            <input type="text" value="2024 - 2025" readonly style="height:42px;border-radius:8px;border:1px solid #E2E8F2;background:#F8FAFD;padding:0 12px;width:100%;font-size:13.5px;color:#33455F;"/>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-type">Client Type</label>
+                            <select id="f-type" name="clientType">
+                                <option value="">All Types</option>
+                                <option th:each="t : ${clientTypes}" th:value="${t}" th:text="${t}"
+                                        th:selected="${t == filter.clientType}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-status">Return Status</label>
+                            <select id="f-status" name="status">
+                                <option value="">All Status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"
+                                        th:selected="${s == filter.status}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-industry">Industry</label>
+                            <select id="f-industry" name="industry">
+                                <option value="">All Industries</option>
+                                <option th:each="i : ${industries}" th:value="${i}" th:text="${i}"
+                                        th:selected="${i == filter.industry}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label>Due Date Range</label>
+                            <input type="date" name="dueFrom" th:value="${filter.dueFrom}" style="margin-bottom:8px;"/>
+                            <input type="date" name="dueTo" th:value="${filter.dueTo}"/>
+                        </div>
+
+                        <button type="submit" class="btn-apply">Apply Filters</button>
+                        <a th:href="@{/corporation-tax}" class="btn-reset">Reset</a>
+                    </form>
+                </aside>
+
+                <!-- Table -->
+                <div class="jobs-table-card">
+                    <div class="jobs-table-head">
+                        <h2>Corporate Tax Overview</h2>
+                        <div class="search-box">
+                            <input type="search" name="q" form="filtersForm" placeholder="Search by client name or UTR..." th:value="${filter.q}"/>
+                            <i class="bi bi-search"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table class="jobs-table">
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th>UTR</th>
+                                    <th class="fy-col">Accounting Period</th>
+                                    <th class="num-col">Taxable Profit</th>
+                                    <th class="num-col">Tax Payable</th>
+                                    <th>Status</th>
+                                    <th>Due Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="tr, it : ${returns}">
+                                    <td>
+                                        <div class="client-cell">
+                                            <span class="client-avatar" th:classappend="'avatar-tint-' + ${it.index % 5}"
+                                                  th:text="${tr.initials}">JM</span>
+                                            <span class="client-info">
+                                                <span class="client-name" th:text="${tr.clientName}">Client Ltd</span>
+                                                <span class="client-ref" th:text="'UTR: ' + ${tr.utr}">UTR: 1234567890</span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td th:text="${tr.utr}">1234567890</td>
+                                    <td class="fy-col" th:text="${tr.accountingPeriodLabel}">01/04/2024 - 31/03/2025</td>
+                                    <td class="num-col" th:text="${tr.taxableProfitLabel}">£285,600</td>
+                                    <td class="num-col" style="color:#16A34A;font-weight:600;" th:text="${tr.taxPayableLabel}">£57,120</td>
+                                    <td>
+                                        <span class="status-pill" th:classappend="'pill-' + ${tr.status}" th:text="${tr.status.label}">Status</span>
+                                    </td>
+                                    <td th:text="${tr.dueDateLabel}">01 Aug 2025</td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <a th:href="@{/corporation-tax/{id}(id=${tr.id})}" class="row-action-btn" title="View"><i class="bi bi-eye"></i></a>
+                                            <a th:href="@{/corporation-tax/{id}/edit(id=${tr.id})}" class="row-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                                            <button type="button" class="row-action-btn" title="More (coming soon)"><i class="bi bi-three-dots-vertical"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(returns)}">
+                                    <td colspan="8" class="empty-row">No corporate tax returns match these filters.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-footer">
+                        <span class="showing-text" th:if="${page.totalElements > 0}">
+                            Showing <span th:text="${page.number * page.size + 1}">1</span>
+                            to <span th:text="${page.number * page.size + returns.size()}">6</span>
+                            of <span th:text="${page.totalElements}">78</span> entries
+                        </span>
+                        <span class="showing-text" th:unless="${page.totalElements > 0}">No entries</span>
+
+                        <nav class="pagination" th:if="${page.totalPages > 1}">
+                            <a th:href="@{/corporation-tax(clientType=${filter.clientType},status=${filter.status},industry=${filter.industry},dueFrom=${filter.dueFrom},dueTo=${filter.dueTo},q=${filter.q},page=0)}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&laquo;</a>
+                            <a th:href="@{/corporation-tax(clientType=${filter.clientType},status=${filter.status},industry=${filter.industry},dueFrom=${filter.dueFrom},dueTo=${filter.dueTo},q=${filter.q},page=${page.number - 1})}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&lsaquo;</a>
+
+                            <a th:each="p : ${#numbers.sequence(0, page.totalPages - 1)}"
+                               th:href="@{/corporation-tax(clientType=${filter.clientType},status=${filter.status},industry=${filter.industry},dueFrom=${filter.dueFrom},dueTo=${filter.dueTo},q=${filter.q},page=${p})}"
+                               class="page-btn" th:classappend="${p == page.number} ? ' active'"
+                               th:text="${p + 1}">1</a>
+
+                            <a th:href="@{/corporation-tax(clientType=${filter.clientType},status=${filter.status},industry=${filter.industry},dueFrom=${filter.dueFrom},dueTo=${filter.dueTo},q=${filter.q},page=${page.number + 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&rsaquo;</a>
+                            <a th:href="@{/corporation-tax(clientType=${filter.clientType},status=${filter.status},industry=${filter.industry},dueFrom=${filter.dueFrom},dueTo=${filter.dueTo},q=${filter.q},page=${page.totalPages - 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&raquo;</a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Right rail -->
+                <aside class="right-rail">
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Tax Summary <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3></div>
+                        <div class="overview-body">
+                            <div class="overview-pie-wrap" style="width:128px;height:128px;">
+                                <canvas id="taxSummaryDonut"></canvas>
+                                <div class="donut-center">
+                                    <span class="donut-center-value" style="font-size:17px;">£156,820</span>
+                                    <span class="donut-center-label">Total Tax Payable</span>
+                                </div>
+                            </div>
+                            <ul class="expense-legend">
+                                <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">Tax Paid</span><span class="leg-amount">£86,400 (55.1%)</span></li>
+                                <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">In Progress</span><span class="leg-amount">£34,600 (22.1%)</span></li>
+                                <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">Pending</span><span class="leg-amount">£22,300 (14.2%)</span></li>
+                                <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">In Review</span><span class="leg-amount">£13,520 (8.6%)</span></li>
+                            </ul>
+                        </div>
+                        <a href="#" class="see-all-link" style="display:block;text-align:center;margin-top:10px;padding-top:12px;border-top:1px solid #F2F5FA;">View full summary <i class="bi bi-arrow-right"></i></a>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Quick Actions</h3></div>
+                        <ul class="quick-actions">
+                            <li><a href="#"><i class="bi bi-file-earmark-plus-fill"></i> Start New Corporate Tax Enquiry <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-cloud-upload-fill"></i> Upload Financial Statements <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-list-check"></i> Corporation Tax Checklist <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-calculator-fill"></i> Tax Computation Tool <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-wallet2"></i> Check CT Payment Account <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-list-ul"></i> View All Clients <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Upcoming Deadlines</h3><a href="#" class="head-link">View Calendar</a></div>
+                        <ul class="deadline-list">
+                            <li>
+                                <span class="date-chip chip-red" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">31</span><span class="chip-month">JUL</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Corporation Tax Return</span>
+                                    <span class="deadline-sub">John Miller Ltd</span>
+                                </span>
+                                <span class="deadline-pill pill-red">Due in 22 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-amber" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">15</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Corporation Tax Return</span>
+                                    <span class="deadline-sub">Bright Learning Academy Ltd</span>
+                                </span>
+                                <span class="deadline-pill pill-amber">Due in 37 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-amber" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">31</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Corporation Tax Return</span>
+                                    <span class="deadline-sub">GreenBite Café Ltd</span>
+                                </span>
+                                <span class="deadline-pill pill-amber">Due in 53 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-amber" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">30</span><span class="chip-month">SEP</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Corporation Tax Return</span>
+                                    <span class="deadline-sub">AK Consultancy Ltd</span>
+                                </span>
+                                <span class="deadline-pill pill-amber">Due in 83 days</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="see-all-link"><i class="bi bi-plus"></i> View all deadlines</a>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- Bottom row: 3 cards -->
+            <section class="fr-bottom-row">
+                <article class="bk-expense-card">
+                    <h3>Tax Payable Trend <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <div class="revenue-canvas-wrap" style="height:170px;"><canvas id="taxTrendChart"></canvas></div>
+                    <div class="stat-box-row">
+                        <div class="stat-box">
+                            <p class="stat-box-label">Total Tax Payable</p>
+                            <p class="stat-box-value">£156,820</p>
+                        </div>
+                        <div class="stat-box">
+                            <p class="stat-box-label">vs last year</p>
+                            <p class="stat-box-value" style="color:#16A34A;">+12.8%</p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>CT Returns by Status <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <div class="expense-body">
+                        <div class="expense-donut-wrap" style="width:125px;height:125px;"><canvas id="statusDonut"></canvas></div>
+                        <ul class="expense-legend">
+                            <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">Filed</span><span class="leg-amount">65</span><span class="leg-pct">53.3%</span></li>
+                            <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">In Progress</span><span class="leg-amount">14</span><span class="leg-pct">18.0%</span></li>
+                            <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">In Review</span><span class="leg-amount">11</span><span class="leg-pct">14.8%</span></li>
+                            <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">Pending</span><span class="leg-amount">7</span><span class="leg-pct">9.0%</span></li>
+                            <li><span class="dot" style="background:#A78BFA;"></span><span class="leg-label">Others</span><span class="leg-amount">3</span><span class="leg-pct">3.9%</span></li>
+                        </ul>
+                    </div>
+                    <div class="expense-total">Total Returns <b>100</b></div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Top Industries <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <ul class="service-list">
+                        <li>
+                            <span class="service-label" style="flex-basis:95px;">Professional Services</span>
+                            <span class="service-track"><span class="service-fill" style="width:31%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">24 (30.8%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:95px;">Retail &amp; Wholesale</span>
+                            <span class="service-track"><span class="service-fill" style="width:21%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">16 (20.5%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:95px;">IT &amp; Technology</span>
+                            <span class="service-track"><span class="service-fill" style="width:15%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">12 (15.4%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:95px;">Construction</span>
+                            <span class="service-track"><span class="service-fill" style="width:12%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">9 (11.5%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:95px;">Hospitality</span>
+                            <span class="service-track"><span class="service-fill" style="width:8%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">6 (7.7%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:95px;">Others</span>
+                            <span class="service-track"><span class="service-fill" style="width:14%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">11 (14.1%)</span>
+                        </li>
+                    </ul>
+                    <div class="expense-total">Total Clients <b>78</b></div>
+                </article>
+            </section>
+
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/webjars/chart.js/4.4.4/dist/chart.umd.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/corporation-tax.js}"></script>
+</body>
+</html>

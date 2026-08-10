@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('CGT Case Detail')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('capital-gain-tax')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Capital Gain Tax')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${cgtCase.clientName}">Client</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/capital-gain-tax}"><i class="bi bi-arrow-left"></i> Back to Capital Gain Tax</a>
+                        </p>
+                    </div>
+                    <a th:href="@{/capital-gain-tax/{id}/edit(id=${cgtCase.id})}" class="btn-primary-navy">
+                        <i class="bi bi-pencil"></i> Edit Case
+                    </a>
+                </div>
+
+                <dl class="detail-grid">
+                    <div class="detail-item">
+                        <dt>UTR</dt>
+                        <dd th:text="${cgtCase.utr}">1234567890</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Client Type</dt>
+                        <dd th:text="${cgtCase.clientType}">Individual</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Asset Type</dt>
+                        <dd th:text="${cgtCase.assetType}">Residential Property</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Tax Year</dt>
+                        <dd th:text="${cgtCase.taxYearLabel}">2024 - 2025</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Date of Disposal</dt>
+                        <dd th:text="${cgtCase.dateOfDisposalLabel}">15 Jun 2025</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Gain / (Loss)</dt>
+                        <dd th:style="${cgtCase.loss} ? 'color:#E2564F;font-weight:600;' : 'color:#16A34A;font-weight:600;'"
+                            th:text="${cgtCase.gainOrLossLabel}">£185,650</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Tax Payable</dt>
+                        <dd th:style="${cgtCase.taxPayableZero} ? 'color:#4A5B75;font-weight:600;' : 'color:#E2564F;font-weight:600;'"
+                            th:text="${cgtCase.taxPayableLabel}">£37,130</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Status</dt>
+                        <dd><span class="status-pill" th:classappend="'pill-' + ${cgtCase.status}" th:text="${cgtCase.status.label}">Status</span></dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Last Updated</dt>
+                        <dd th:text="${cgtCase.lastUpdatedLabel}">08 Aug 2025</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Assigned To</dt>
+                        <dd th:text="${cgtCase.assignedTo}">Staff</dd>
+                    </div>
+                </dl>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

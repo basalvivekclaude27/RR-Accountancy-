@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${formTitle})}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('company-formation')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Company Formation')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${formTitle}">New Formation Enquiry</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/company-formation}"><i class="bi bi-arrow-left"></i> Back to Company Formation</a>
+                        </p>
+                    </div>
+                </div>
+
+                <form th:action="@{${formAction}}" th:object="${enquiryForm}" method="post" class="job-form" novalidate>
+
+                    <div class="job-form-grid">
+                        <div class="field-block">
+                            <label for="clientName">Client Name</label>
+                            <input type="text" id="clientName" th:field="*{clientName}" placeholder="e.g. John Miller"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('clientName')}" th:errors="*{clientName}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="enquiryRef">Enquiry Reference</label>
+                            <input type="text" id="enquiryRef" th:field="*{enquiryRef}" placeholder="Auto-generated if left blank"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('enquiryRef')}" th:errors="*{enquiryRef}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="companyName">Company Name</label>
+                            <input type="text" id="companyName" th:field="*{companyName}" placeholder="e.g. Miller Tech Solutions Ltd"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('companyName')}" th:errors="*{companyName}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="companyType">Company Type</label>
+                            <input type="text" id="companyType" th:field="*{companyType}" placeholder="e.g. Private Limited"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('companyType')}" th:errors="*{companyType}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="jurisdiction">Jurisdiction</label>
+                            <input type="text" id="jurisdiction" th:field="*{jurisdiction}" placeholder="e.g. UK"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('jurisdiction')}" th:errors="*{jurisdiction}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="stage">Stage</label>
+                            <select id="stage" th:field="*{stage}">
+                                <option value="">Select stage</option>
+                                <option th:each="s : ${stages}" th:value="${s}" th:text="${s.label}"></option>
+                            </select>
+                            <div class="field-error" th:if="${#fields.hasErrors('stage')}" th:errors="*{stage}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="status">Status</label>
+                            <select id="status" th:field="*{status}">
+                                <option value="">Select status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"></option>
+                            </select>
+                            <div class="field-error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="source">Enquiry Source</label>
+                            <select id="source" th:field="*{source}">
+                                <option value="">Select source</option>
+                                <option th:each="s : ${sources}" th:value="${s}" th:text="${s.label}"></option>
+                            </select>
+                            <div class="field-error" th:if="${#fields.hasErrors('source')}" th:errors="*{source}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="assignedTo">Assigned To</label>
+                            <input type="text" id="assignedTo" th:field="*{assignedTo}" placeholder="Staff member name"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('assignedTo')}" th:errors="*{assignedTo}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="enquiryDate">Enquiry Date</label>
+                            <input type="date" id="enquiryDate" th:field="*{enquiryDate}"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('enquiryDate')}" th:errors="*{enquiryDate}"></div>
+                        </div>
+                    </div>
+
+                    <div class="job-form-actions">
+                        <a th:href="@{/company-formation}" class="btn-reset">Cancel</a>
+                        <button type="submit" class="btn-apply"><i class="bi bi-check-lg"></i> Save Enquiry</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

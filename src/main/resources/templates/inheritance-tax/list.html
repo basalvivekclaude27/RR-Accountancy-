@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Inheritance Tax')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('inheritance-tax')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Inheritance Tax')}"></header>
+
+        <main class="content">
+
+            <div class="auth-alert info" th:if="${successMessage}">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${successMessage}">Saved</span>
+            </div>
+
+            <section class="page-header-card">
+                <div class="page-header-row">
+                    <div>
+                        <h1 class="page-title">Inheritance Tax</h1>
+                        <p class="page-sub">Plan today. Protect tomorrow. Minimise tax. Preserve your legacy.</p>
+                    </div>
+                    <a th:href="@{/inheritance-tax/new}" class="btn-primary-navy">
+                        <i class="bi bi-plus-lg"></i> New IHT Enquiry
+                    </a>
+                </div>
+
+                <div class="mini-kpi-row cols-6">
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Total Clients</p>
+                            <p class="mini-kpi-value">38</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+5 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-green"><i class="bi bi-file-earmark-check-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">IHT Returns / Plans <span style="font-weight:400;color:#8494AC;">(This Year)</span></p>
+                            <p class="mini-kpi-value">27</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+6 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-amber"><i class="bi bi-currency-pound"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Est. Tax Liability <span style="font-weight:400;color:#8494AC;">(This Year)</span></p>
+                            <p class="mini-kpi-value">£1,056,480</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+12.6% vs last year</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-violet"><i class="bi bi-shield-fill-check"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Tax Saved <span style="font-weight:400;color:#8494AC;">(This Year)</span></p>
+                            <p class="mini-kpi-value">£312,750</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+15.3% vs last year</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-clock-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Avg. Processing Time</p>
+                            <p class="mini-kpi-value">7.8 Days</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">-1.4 days vs last month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon" style="background:#E4F7F5;color:#14B8A6;"><i class="bi bi-pie-chart-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">In Progress</p>
+                            <p class="mini-kpi-value">9</p>
+                            <p class="mini-kpi-foot"><a href="#" style="color:#2E5BFF;">View details</a></p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Main grid: filters / table / right rail -->
+            <section class="bk-grid">
+
+                <!-- Filters -->
+                <aside class="filters-card">
+                    <div class="filters-head"><i class="bi bi-funnel-fill"></i> Filters</div>
+
+                    <form id="filtersForm" method="get" th:action="@{/inheritance-tax}">
+                        <div class="field-block">
+                            <label for="f-year">Tax Year</label>
+                            <select id="f-year" name="taxYear">
+                                <option value="">All Years</option>
+                                <option th:each="y : ${taxYears}" th:value="${y}" th:text="${y + ' - ' + (y + 1)}"
+                                        th:selected="${y == filter.taxYear}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-type">Client Type</label>
+                            <select id="f-type" name="clientType">
+                                <option value="">All Types</option>
+                                <option th:each="t : ${clientTypes}" th:value="${t}" th:text="${t}"
+                                        th:selected="${t == filter.clientType}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-status">Report Status</label>
+                            <select id="f-status" name="status">
+                                <option value="">All Status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"
+                                        th:selected="${s == filter.status}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-planning">IHT Planning Type</label>
+                            <select id="f-planning" name="planningType">
+                                <option value="">All Types</option>
+                                <option th:each="p : ${planningTypes}" th:value="${p}" th:text="${p}"
+                                        th:selected="${p == filter.planningType}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label>Date Range</label>
+                            <input type="date" name="dateFrom" th:value="${filter.dateFrom}" style="margin-bottom:8px;"/>
+                            <input type="date" name="dateTo" th:value="${filter.dateTo}"/>
+                        </div>
+
+                        <button type="submit" class="btn-apply">Apply Filters</button>
+                        <a th:href="@{/inheritance-tax}" class="btn-reset">Reset</a>
+                    </form>
+                </aside>
+
+                <!-- Table -->
+                <div class="jobs-table-card">
+                    <div class="jobs-table-head">
+                        <h2>IHT Cases Overview</h2>
+                        <div class="search-box">
+                            <input type="search" name="q" form="filtersForm" placeholder="Search by client name or UTR..." th:value="${filter.q}"/>
+                            <i class="bi bi-search"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table class="jobs-table">
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th>UTR</th>
+                                    <th>Planning / Report Type</th>
+                                    <th class="num-col">Estate Value</th>
+                                    <th class="num-col">Nil Rate Band<br/>Available</th>
+                                    <th class="num-col">Est. Tax Liability</th>
+                                    <th>Status</th>
+                                    <th>Last Updated</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="c, it : ${cases}">
+                                    <td>
+                                        <div class="client-cell">
+                                            <span class="client-avatar" th:classappend="'avatar-tint-' + ${it.index % 5}"
+                                                  th:text="${c.initials}">JM</span>
+                                            <span class="client-info">
+                                                <span class="client-name" th:text="${c.clientName}">Client</span>
+                                                <span class="client-ref" th:text="'UTR: ' + ${c.utr}">UTR: 1234567890</span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td th:text="${c.utr}">1234567890</td>
+                                    <td th:text="${c.planningType}">IHT Return</td>
+                                    <td class="num-col" th:text="${c.estateValueLabel}">£1,250,000</td>
+                                    <td class="num-col" th:text="${c.nilRateBandLabel}">£325,000</td>
+                                    <td class="num-col" style="color:#E2564F;font-weight:600;" th:text="${c.taxLiabilityLabel}">£185,000</td>
+                                    <td>
+                                        <span class="status-pill" th:classappend="'pill-' + ${c.status}" th:text="${c.status.label}">Status</span>
+                                    </td>
+                                    <td th:text="${c.lastUpdatedLabel}">08 Aug 2025</td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <a th:href="@{/inheritance-tax/{id}(id=${c.id})}" class="row-action-btn" title="View"><i class="bi bi-eye"></i></a>
+                                            <a th:href="@{/inheritance-tax/{id}/edit(id=${c.id})}" class="row-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                                            <button type="button" class="row-action-btn" title="More (coming soon)"><i class="bi bi-three-dots-vertical"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(cases)}">
+                                    <td colspan="9" class="empty-row">No IHT cases match these filters.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-footer">
+                        <span class="showing-text" th:if="${page.totalElements > 0}">
+                            Showing <span th:text="${page.number * page.size + 1}">1</span>
+                            to <span th:text="${page.number * page.size + cases.size()}">6</span>
+                            of <span th:text="${page.totalElements}">38</span> entries
+                        </span>
+                        <span class="showing-text" th:unless="${page.totalElements > 0}">No entries</span>
+
+                        <nav class="pagination" th:if="${page.totalPages > 1}">
+                            <a th:href="@{/inheritance-tax(taxYear=${filter.taxYear},clientType=${filter.clientType},status=${filter.status},planningType=${filter.planningType},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=0)}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&laquo;</a>
+                            <a th:href="@{/inheritance-tax(taxYear=${filter.taxYear},clientType=${filter.clientType},status=${filter.status},planningType=${filter.planningType},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.number - 1})}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&lsaquo;</a>
+
+                            <th:block th:each="p : ${pageNumbers}">
+                                <span th:if="${p == -1}" class="page-ellipsis">&hellip;</span>
+                                <a th:unless="${p == -1}"
+                                   th:href="@{/inheritance-tax(taxYear=${filter.taxYear},clientType=${filter.clientType},status=${filter.status},planningType=${filter.planningType},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${p - 1})}"
+                                   class="page-btn" th:classappend="${p - 1 == page.number} ? ' active'"
+                                   th:text="${p}">1</a>
+                            </th:block>
+
+                            <a th:href="@{/inheritance-tax(taxYear=${filter.taxYear},clientType=${filter.clientType},status=${filter.status},planningType=${filter.planningType},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.number + 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&rsaquo;</a>
+                            <a th:href="@{/inheritance-tax(taxYear=${filter.taxYear},clientType=${filter.clientType},status=${filter.status},planningType=${filter.planningType},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.totalPages - 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&raquo;</a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Right rail -->
+                <aside class="right-rail">
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>IHT Summary <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3></div>
+                        <div class="overview-body">
+                            <div class="overview-pie-wrap" style="width:128px;height:128px;">
+                                <canvas id="ihtSummaryDonut"></canvas>
+                                <div class="donut-center">
+                                    <span class="donut-center-value" style="font-size:15.5px;">£1,056,480</span>
+                                    <span class="donut-center-label">Est. Tax Liability</span>
+                                </div>
+                            </div>
+                            <ul class="expense-legend">
+                                <li><span class="dot" style="background:#E2564F;"></span><span class="leg-label">Est. Tax Liability</span><span class="leg-amount">£1,056,480 (52.3%)</span></li>
+                                <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">Tax Saved</span><span class="leg-amount">£312,750 (15.5%)</span></li>
+                                <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">Planning in Progress</span><span class="leg-amount">£214,600 (10.6%)</span></li>
+                                <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">No Liability / Nil Tax</span><span class="leg-amount">£435,320 (21.6%)</span></li>
+                            </ul>
+                        </div>
+                        <a href="#" class="see-all-link" style="display:block;text-align:center;margin-top:10px;padding-top:12px;border-top:1px solid #F2F5FA;">View full summary <i class="bi bi-arrow-right"></i></a>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Quick Actions</h3></div>
+                        <ul class="quick-actions">
+                            <li><a href="#"><i class="bi bi-file-earmark-plus-fill"></i> Start New IHT Enquiry <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-cloud-upload-fill"></i> Upload Estate Details <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-list-check"></i> IHT Planning Checklist <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-calculator-fill"></i> Nil Rate Band Calculator <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-book-half"></i> Gift &amp; Exemption Guide <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-list-ul"></i> View All Clients <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Upcoming IHT Deadlines</h3><a href="#" class="head-link">View Calendar</a></div>
+                        <ul class="deadline-list">
+                            <li>
+                                <span class="date-chip chip-red" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">30</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">IHT Return &ndash; Estate of John Miller</span>
+                                    <span class="deadline-sub">Due Date: 30 Aug 2025</span>
+                                </span>
+                                <span class="deadline-pill pill-red">In 22 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-amber" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">15</span><span class="chip-month">SEP</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">IHT Return &ndash; Estate of Sarah Patel</span>
+                                    <span class="deadline-sub">Due Date: 15 Sep 2025</span>
+                                </span>
+                                <span class="deadline-pill pill-amber">In 38 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-green" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">30</span><span class="chip-month">SEP</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">IHT Return &ndash; Estate of Lisa Roberts</span>
+                                    <span class="deadline-sub">Due Date: 30 Sep 2025</span>
+                                </span>
+                                <span class="deadline-pill pill-green">In 53 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-violet" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">31</span><span class="chip-month">OCT</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">IHT Return &ndash; Estate of Amit Kumar</span>
+                                    <span class="deadline-sub">Due Date: 31 Oct 2025</span>
+                                </span>
+                                <span class="deadline-pill pill-violet">In 84 days</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="see-all-link"><i class="bi bi-plus"></i> View all deadlines</a>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- Bottom row: 3 cards -->
+            <section class="fr-bottom-row">
+                <article class="bk-expense-card">
+                    <h3>Est. Tax Liability Trend <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <div class="revenue-canvas-wrap" style="height:170px;"><canvas id="ihtTrendChart"></canvas></div>
+                    <div class="stat-box-row">
+                        <div class="stat-box">
+                            <p class="stat-box-label">Est. Tax Liability (This Year)</p>
+                            <p class="stat-box-value">£1,056,480</p>
+                        </div>
+                        <div class="stat-box">
+                            <p class="stat-box-label">vs last year</p>
+                            <p class="stat-box-value" style="color:#16A34A;">+12.6%</p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Estate Value Distribution <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <div class="expense-body">
+                        <div class="expense-donut-wrap" style="width:125px;height:125px;"><canvas id="ihtEstateDonut"></canvas></div>
+                        <ul class="expense-legend">
+                            <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">£0 - £1M</span><span class="leg-amount">10</span><span class="leg-pct">26.3%</span></li>
+                            <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">£1M - £2M</span><span class="leg-amount">12</span><span class="leg-pct">31.6%</span></li>
+                            <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">£2M - £3M</span><span class="leg-amount">8</span><span class="leg-pct">21.1%</span></li>
+                            <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">£3M+</span><span class="leg-amount">8</span><span class="leg-pct">21.1%</span></li>
+                        </ul>
+                    </div>
+                    <div class="expense-total">Average Estate Value <b>£2,124,000</b></div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Planning Type <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <ul class="service-list">
+                        <li>
+                            <span class="service-label" style="flex-basis:95px;">IHT Planning</span>
+                            <span class="service-track"><span class="service-fill" style="width:42%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">16 (42.1%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:95px;">IHT Return</span>
+                            <span class="service-track"><span class="service-fill" style="width:40%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">15 (39.5%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:95px;">Review / Update</span>
+                            <span class="service-track"><span class="service-fill" style="width:13%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">5 (13.2%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:95px;">Deeds &amp; Trusts</span>
+                            <span class="service-track"><span class="service-fill" style="width:5%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">2 (5.3%)</span>
+                        </li>
+                    </ul>
+                    <div class="expense-total">Total Cases <b>38</b></div>
+                </article>
+            </section>
+
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/webjars/chart.js/4.4.4/dist/chart.umd.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/inheritance-tax.js}"></script>
+</body>
+</html>

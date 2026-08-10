@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Startup Enquiry Detail')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('business-startup')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Business Startup')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${enquiry.businessName}">Business Name</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/business-startup}"><i class="bi bi-arrow-left"></i> Back to Startup Enquiries</a>
+                        </p>
+                    </div>
+                    <a th:href="@{/business-startup/{id}/edit(id=${enquiry.id})}" class="btn-primary-navy">
+                        <i class="bi bi-pencil"></i> Edit Enquiry
+                    </a>
+                </div>
+
+                <dl class="detail-grid">
+                    <div class="detail-item">
+                        <dt>Client Name</dt>
+                        <dd th:text="${enquiry.clientName}">Client</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Enquiry Reference</dt>
+                        <dd th:text="${enquiry.enquiryRef}">ENQ-1001</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Business Type</dt>
+                        <dd th:text="${enquiry.businessType}">IT Services</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Stage</dt>
+                        <dd><span class="status-pill" th:classappend="'pill-' + ${enquiry.stage}" th:text="${enquiry.stage.label}">Stage</span></dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Status</dt>
+                        <dd><span class="status-pill" th:classappend="'pill-' + ${enquiry.status}" th:text="${enquiry.status.label}">Status</span></dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Enquiry Source</dt>
+                        <dd th:text="${enquiry.source.label}">Website</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Assigned To</dt>
+                        <dd th:text="${enquiry.assignedTo}">Staff</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Enquiry Date</dt>
+                        <dd th:text="${enquiry.enquiryDateLabel}">08 Aug 2025</dd>
+                    </div>
+                </dl>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Business Income Tax')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('business-income-tax')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Business Income Tax')}"></header>
+
+        <main class="content">
+
+            <div class="auth-alert info" th:if="${successMessage}">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${successMessage}">Saved</span>
+            </div>
+
+            <!-- Page header card -->
+            <section class="page-header-card">
+                <div class="page-header-row">
+                    <div>
+                        <h1 class="page-title">Business Income Tax</h1>
+                        <p class="page-sub">Smart tax planning. Accurate filing. Minimum tax liability. Maximum savings.</p>
+                    </div>
+                    <a th:href="@{/business-income-tax/new}" class="btn-primary-navy">
+                        <i class="bi bi-plus-lg"></i> New Tax Enquiry
+                    </a>
+                </div>
+
+                <div class="mini-kpi-row cols-6">
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Total Clients</p>
+                            <p class="mini-kpi-value">96</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+12 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-green"><i class="bi bi-file-earmark-check-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Returns Filed <span style="font-weight:400;color:#8494AC;">(Year)</span></p>
+                            <p class="mini-kpi-value">72</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+9 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-amber"><i class="bi bi-currency-pound"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Tax Payable <span style="font-weight:400;color:#8494AC;">(Year)</span></p>
+                            <p class="mini-kpi-value">£192,680</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+14.7% vs last year</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-violet"><i class="bi bi-piggy-bank-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Tax Saved <span style="font-weight:400;color:#8494AC;">(Year)</span></p>
+                            <p class="mini-kpi-value">£48,230</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+16.2% vs last year</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-clock-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Avg. Tax Turnaround</p>
+                            <p class="mini-kpi-value">6.1 Days</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">-1.2 days vs last month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon" style="background:#E4F7F5;color:#14B8A6;"><i class="bi bi-pie-chart-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">In Progress</p>
+                            <p class="mini-kpi-value">18</p>
+                            <p class="mini-kpi-foot"><a href="#" style="color:#2E5BFF;">View details</a></p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Main grid: filters / table / right rail -->
+            <section class="bk-grid">
+
+                <!-- Filters -->
+                <aside class="filters-card">
+                    <div class="filters-head"><i class="bi bi-funnel-fill"></i> Filters</div>
+
+                    <form id="filtersForm" method="get" th:action="@{/business-income-tax}">
+                        <div class="field-block">
+                            <label for="f-year">Tax Year</label>
+                            <select id="f-year" name="taxYear">
+                                <option value="">All Years</option>
+                                <option th:each="y : ${taxYears}" th:value="${y}"
+                                        th:text="|${y} - ${y + 1}|"
+                                        th:selected="${y == filter.taxYear}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-type">Client Type</label>
+                            <select id="f-type" name="businessType">
+                                <option value="">All Types</option>
+                                <option th:each="t : ${businessTypes}" th:value="${t}" th:text="${t}"
+                                        th:selected="${t == filter.businessType}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-status">Return Status</label>
+                            <select id="f-status" name="status">
+                                <option value="">All Status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"
+                                        th:selected="${s == filter.status}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-industry">Industry</label>
+                            <select id="f-industry" name="industry">
+                                <option value="">All Industries</option>
+                                <option th:each="i : ${industries}" th:value="${i}" th:text="${i}"
+                                        th:selected="${i == filter.industry}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label>Date Range</label>
+                            <input type="date" name="dateFrom" th:value="${filter.dateFrom}" style="margin-bottom:8px;"/>
+                            <input type="date" name="dateTo" th:value="${filter.dateTo}"/>
+                        </div>
+
+                        <button type="submit" class="btn-apply">Apply Filters</button>
+                        <a th:href="@{/business-income-tax}" class="btn-reset">Reset</a>
+                    </form>
+                </aside>
+
+                <!-- Table -->
+                <div class="jobs-table-card">
+                    <div class="jobs-table-head">
+                        <h2>Business Income Tax Overview</h2>
+                        <div class="search-box">
+                            <input type="search" name="q" form="filtersForm" placeholder="Search by client name or UTR..." th:value="${filter.q}"/>
+                            <i class="bi bi-search"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table class="jobs-table">
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th class="fy-col">UTR</th>
+                                    <th>Business Type</th>
+                                    <th class="num-col">Profit Before Tax</th>
+                                    <th class="num-col">Tax Payable</th>
+                                    <th>Status</th>
+                                    <th>Last Updated</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="tr, it : ${returns}">
+                                    <td>
+                                        <div class="client-cell">
+                                            <span class="client-avatar" th:classappend="'avatar-tint-' + ${it.index % 5}"
+                                                  th:text="${tr.initials}">JM</span>
+                                            <span class="client-info">
+                                                <span class="client-name" th:text="${tr.clientName}">Client</span>
+                                                <span class="client-ref" th:text="'UTR: ' + ${tr.utr}">UTR: 1234567890</span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="fy-col" th:text="${tr.utr}">1234567890</td>
+                                    <td th:text="${tr.businessType}">Sole Trader</td>
+                                    <td class="num-col" th:text="${tr.profitBeforeTaxLabel}">£86,250</td>
+                                    <td class="num-col" style="color:#16A34A;font-weight:600;" th:text="${tr.taxPayableLabel}">£17,280</td>
+                                    <td>
+                                        <span class="status-pill" th:classappend="'pill-' + ${tr.status}" th:text="${tr.status.label}">Status</span>
+                                    </td>
+                                    <td th:text="${tr.lastUpdatedLabel}">08 Aug 2025</td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <a th:href="@{/business-income-tax/{id}(id=${tr.id})}" class="row-action-btn" title="View"><i class="bi bi-eye"></i></a>
+                                            <a th:href="@{/business-income-tax/{id}/edit(id=${tr.id})}" class="row-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                                            <button type="button" class="row-action-btn" title="More (coming soon)"><i class="bi bi-three-dots-vertical"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(returns)}">
+                                    <td colspan="8" class="empty-row">No tax returns match these filters.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-footer">
+                        <span class="showing-text" th:if="${page.totalElements > 0}">
+                            Showing <span th:text="${page.number * page.size + 1}">1</span>
+                            to <span th:text="${page.number * page.size + returns.size()}">6</span>
+                            of <span th:text="${page.totalElements}">96</span> entries
+                        </span>
+                        <span class="showing-text" th:unless="${page.totalElements > 0}">No entries</span>
+
+                        <nav class="pagination" th:if="${page.totalPages > 1}">
+                            <a th:href="@{/business-income-tax(taxYear=${filter.taxYear},businessType=${filter.businessType},status=${filter.status},industry=${filter.industry},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=0)}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&laquo;</a>
+                            <a th:href="@{/business-income-tax(taxYear=${filter.taxYear},businessType=${filter.businessType},status=${filter.status},industry=${filter.industry},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.number - 1})}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&lsaquo;</a>
+
+                            <a th:each="p : ${#numbers.sequence(0, page.totalPages - 1)}"
+                               th:href="@{/business-income-tax(taxYear=${filter.taxYear},businessType=${filter.businessType},status=${filter.status},industry=${filter.industry},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${p})}"
+                               class="page-btn" th:classappend="${p == page.number} ? ' active'"
+                               th:text="${p + 1}">1</a>
+
+                            <a th:href="@{/business-income-tax(taxYear=${filter.taxYear},businessType=${filter.businessType},status=${filter.status},industry=${filter.industry},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.number + 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&rsaquo;</a>
+                            <a th:href="@{/business-income-tax(taxYear=${filter.taxYear},businessType=${filter.businessType},status=${filter.status},industry=${filter.industry},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.totalPages - 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&raquo;</a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Right rail -->
+                <aside class="right-rail">
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Tax Summary <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3></div>
+                        <div class="overview-body">
+                            <div class="overview-pie-wrap" style="width:128px;height:128px;">
+                                <canvas id="taxSummaryDonut"></canvas>
+                                <div class="donut-center">
+                                    <span class="donut-center-value" style="font-size:17px;">£192,680</span>
+                                    <span class="donut-center-label">Total Tax Payable</span>
+                                </div>
+                            </div>
+                            <ul class="expense-legend">
+                                <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">Tax Paid</span><span class="leg-amount">£118,450 (61.4%)</span></li>
+                                <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">In Progress</span><span class="leg-amount">£34,600 (18.0%)</span></li>
+                                <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">Pending</span><span class="leg-amount">£24,780 (12.9%)</span></li>
+                                <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">In Review</span><span class="leg-amount">£14,850 (7.7%)</span></li>
+                            </ul>
+                        </div>
+                        <a href="#" class="see-all-link" style="display:block;text-align:center;margin-top:10px;padding-top:12px;border-top:1px solid #F2F5FA;">View full summary <i class="bi bi-arrow-right"></i></a>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Quick Actions</h3></div>
+                        <ul class="quick-actions">
+                            <li><a href="#"><i class="bi bi-file-earmark-plus-fill"></i> Start New Tax Enquiry <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-cloud-upload-fill"></i> Upload Documents <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-list-check"></i> Business Income Tax Checklist <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-tags-fill"></i> Expense Categorisation Tool <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-calculator-fill"></i> Tax Liability Calculator <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-list-ul"></i> View All Clients <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Upcoming Deadlines</h3><a href="#" class="head-link">View Calendar</a></div>
+                        <ul class="deadline-list">
+                            <li>
+                                <span class="date-chip chip-red" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">31</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Business Income Tax Return</span>
+                                    <span class="deadline-sub">2024 - 2025 Tax Year</span>
+                                </span>
+                                <span class="deadline-pill pill-red">In 23 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-amber" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">30</span><span class="chip-month">SEP</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Payment on Account (1st)</span>
+                                    <span class="deadline-sub">2025 - 2026 Tax Year</span>
+                                </span>
+                                <span class="deadline-pill pill-amber">In 53 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip" style="width:36px;height:36px;background:#E6F6EC;color:#16A34A;"><span class="chip-day" style="font-size:15px;">31</span><span class="chip-month">JAN</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Self Assessment Deadline</span>
+                                    <span class="deadline-sub">2024 - 2025 Tax Year</span>
+                                </span>
+                                <span class="deadline-pill" style="background:#E6F6EC;color:#16A34A;">In 176 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-violet" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">31</span><span class="chip-month">JUL</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Payment on Account (2nd)</span>
+                                    <span class="deadline-sub">2025 - 2026 Tax Year</span>
+                                </span>
+                                <span class="deadline-pill pill-violet">In 357 days</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="see-all-link"><i class="bi bi-plus"></i> View all deadlines</a>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- Bottom row: 3 cards -->
+            <section class="fr-bottom-row">
+                <article class="bk-expense-card">
+                    <div class="chart-card-head" style="margin-bottom:16px;">
+                        <h3 style="margin:0;">Tax Payable Trend <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                        <select class="year-select" aria-label="Tax payable period">
+                            <option>This Financial Year</option>
+                            <option>Last Financial Year</option>
+                        </select>
+                    </div>
+                    <div class="revenue-canvas-wrap" style="height:170px;"><canvas id="taxTrendChart"></canvas></div>
+                    <div class="expense-total" style="display:flex;justify-content:space-between;align-items:center;text-align:left;">
+                        <span>Total Tax Payable<br/><b style="font-size:18px;color:#0F2544;">£192,680</b></span>
+                        <span style="color:#16A34A;font-weight:600;">+14.7% vs last year</span>
+                    </div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Business Type Distribution</h3>
+                    <div class="expense-body">
+                        <div class="expense-donut-wrap" style="width:125px;height:125px;"><canvas id="typeDonut"></canvas></div>
+                        <ul class="expense-legend">
+                            <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">Sole Trader</span><span class="leg-amount">42</span><span class="leg-pct">43.8%</span></li>
+                            <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">Limited Company</span><span class="leg-amount">28</span><span class="leg-pct">29.2%</span></li>
+                            <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">Partnership</span><span class="leg-amount">16</span><span class="leg-pct">16.7%</span></li>
+                            <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">LLP</span><span class="leg-amount">6</span><span class="leg-pct">6.3%</span></li>
+                            <li><span class="dot" style="background:#A78BFA;"></span><span class="leg-label">Others</span><span class="leg-amount">4</span><span class="leg-pct">6.0%</span></li>
+                        </ul>
+                    </div>
+                    <div class="expense-total">Total Clients <b>96</b></div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Top Industries <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <ul class="service-list">
+                        <li>
+                            <span class="service-label" style="flex-basis:80px;">Retail</span>
+                            <span class="service-track"><span class="service-fill" style="width:23%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">22 (22.9%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:80px;">Construction</span>
+                            <span class="service-track"><span class="service-fill" style="width:19%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">18 (18.8%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:80px;">IT &amp; Services</span>
+                            <span class="service-track"><span class="service-fill" style="width:17%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">16 (16.7%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:80px;">Consultancy</span>
+                            <span class="service-track"><span class="service-fill" style="width:13%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">12 (12.5%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:80px;">Healthcare</span>
+                            <span class="service-track"><span class="service-fill" style="width:10%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">10 (10.4%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:80px;">Others</span>
+                            <span class="service-track"><span class="service-fill" style="width:19%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">18 (18.8%)</span>
+                        </li>
+                    </ul>
+                    <div class="expense-total">Total Clients <b>96</b></div>
+                </article>
+            </section>
+
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/webjars/chart.js/4.4.4/dist/chart.umd.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/business-income-tax.js}"></script>
+</body>
+</html>

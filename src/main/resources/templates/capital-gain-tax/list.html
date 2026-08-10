@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Capital Gain Tax')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('capital-gain-tax')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Capital Gain Tax')}"></header>
+
+        <main class="content">
+
+            <div class="auth-alert info" th:if="${successMessage}">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${successMessage}">Saved</span>
+            </div>
+
+            <section class="page-header-card">
+                <div class="page-header-row">
+                    <div>
+                        <h1 class="page-title">Capital Gain Tax</h1>
+                        <p class="page-sub">Expert guidance. Accurate reporting. Optimise your gains, legally.</p>
+                    </div>
+                    <a th:href="@{/capital-gain-tax/new}" class="btn-primary-navy">
+                        <i class="bi bi-plus-lg"></i> New CGT Enquiry
+                    </a>
+                </div>
+
+                <div class="mini-kpi-row cols-6">
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Total Clients</p>
+                            <p class="mini-kpi-value">42</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+6 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-green"><i class="bi bi-file-earmark-check-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">CGT Reports Filed <span style="font-weight:400;color:#8494AC;">(This Year)</span></p>
+                            <p class="mini-kpi-value">36</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+5 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-amber"><i class="bi bi-currency-pound"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Total Gains <span style="font-weight:400;color:#8494AC;">(This Year)</span></p>
+                            <p class="mini-kpi-value">£1,248,560</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+18.7% vs last year</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-violet"><i class="bi bi-bar-chart-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Total Tax Payable <span style="font-weight:400;color:#8494AC;">(This Year)</span></p>
+                            <p class="mini-kpi-value">£248,750</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+15.9% vs last year</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-clock-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Avg. Processing Time</p>
+                            <p class="mini-kpi-value">9.4 Days</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">-2.1 days vs last month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon" style="background:#E4F7F5;color:#14B8A6;"><i class="bi bi-pie-chart-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">In Progress</p>
+                            <p class="mini-kpi-value">11</p>
+                            <p class="mini-kpi-foot"><a href="#" style="color:#2E5BFF;">View details</a></p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Main grid: filters / table / right rail -->
+            <section class="bk-grid">
+
+                <!-- Filters -->
+                <aside class="filters-card">
+                    <div class="filters-head"><i class="bi bi-funnel-fill"></i> Filters</div>
+
+                    <form id="filtersForm" method="get" th:action="@{/capital-gain-tax}">
+                        <div class="field-block">
+                            <label for="f-year">Tax Year</label>
+                            <select id="f-year" name="taxYear">
+                                <option value="">All Years</option>
+                                <option th:each="y : ${taxYears}" th:value="${y}" th:text="${y + ' - ' + (y + 1)}"
+                                        th:selected="${y == filter.taxYear}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-type">Client Type</label>
+                            <select id="f-type" name="clientType">
+                                <option value="">All Types</option>
+                                <option th:each="t : ${clientTypes}" th:value="${t}" th:text="${t}"
+                                        th:selected="${t == filter.clientType}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-asset">Asset Type</label>
+                            <select id="f-asset" name="assetType">
+                                <option value="">All Asset Types</option>
+                                <option th:each="a : ${assetTypes}" th:value="${a}" th:text="${a}"
+                                        th:selected="${a == filter.assetType}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-status">Report Status</label>
+                            <select id="f-status" name="status">
+                                <option value="">All Status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"
+                                        th:selected="${s == filter.status}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label>Date Range</label>
+                            <input type="date" name="dateFrom" th:value="${filter.dateFrom}" style="margin-bottom:8px;"/>
+                            <input type="date" name="dateTo" th:value="${filter.dateTo}"/>
+                        </div>
+
+                        <button type="submit" class="btn-apply">Apply Filters</button>
+                        <a th:href="@{/capital-gain-tax}" class="btn-reset">Reset</a>
+                    </form>
+                </aside>
+
+                <!-- Table -->
+                <div class="jobs-table-card">
+                    <div class="jobs-table-head">
+                        <h2>CGT Cases Overview</h2>
+                        <div class="search-box">
+                            <input type="search" name="q" form="filtersForm" placeholder="Search by client name or UTR..." th:value="${filter.q}"/>
+                            <i class="bi bi-search"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table class="jobs-table">
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th>UTR <i class="bi bi-chevron-expand" style="font-size:10px;color:#B4BECD;"></i></th>
+                                    <th>Asset Type</th>
+                                    <th class="fy-col">Date of Disposal</th>
+                                    <th class="num-col">Gain / (Loss)</th>
+                                    <th class="num-col">Tax Payable</th>
+                                    <th>Status <i class="bi bi-chevron-expand" style="font-size:10px;color:#B4BECD;"></i></th>
+                                    <th>Last Updated</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="c, it : ${cases}">
+                                    <td>
+                                        <div class="client-cell">
+                                            <span class="client-avatar" th:classappend="'avatar-tint-' + ${it.index % 5}"
+                                                  th:text="${c.initials}">JM</span>
+                                            <span class="client-info">
+                                                <span class="client-name" th:text="${c.clientName}">Client</span>
+                                                <span class="client-ref" th:text="'UTR: ' + ${c.utr}">UTR: 1234567890</span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td th:text="${c.utr}">1234567890</td>
+                                    <td th:text="${c.assetType}">Residential Property</td>
+                                    <td class="fy-col" th:text="${c.dateOfDisposalLabel}">15 Jun 2025</td>
+                                    <td class="num-col" th:style="${c.loss} ? 'color:#E2564F;font-weight:600;' : 'color:#16A34A;font-weight:600;'"
+                                        th:text="${c.gainOrLossLabel}">£185,650</td>
+                                    <td class="num-col" th:style="${c.taxPayableZero} ? 'color:#4A5B75;font-weight:600;' : 'color:#E2564F;font-weight:600;'"
+                                        th:text="${c.taxPayableLabel}">£37,130</td>
+                                    <td>
+                                        <span class="status-pill" th:classappend="'pill-' + ${c.status}" th:text="${c.status.label}">Status</span>
+                                    </td>
+                                    <td th:text="${c.lastUpdatedLabel}">08 Aug 2025</td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <a th:href="@{/capital-gain-tax/{id}(id=${c.id})}" class="row-action-btn" title="View"><i class="bi bi-eye"></i></a>
+                                            <a th:href="@{/capital-gain-tax/{id}/edit(id=${c.id})}" class="row-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                                            <button type="button" class="row-action-btn" title="More (coming soon)"><i class="bi bi-three-dots-vertical"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(cases)}">
+                                    <td colspan="9" class="empty-row">No CGT cases match these filters.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-footer">
+                        <span class="showing-text" th:if="${page.totalElements > 0}">
+                            Showing <span th:text="${page.number * page.size + 1}">1</span>
+                            to <span th:text="${page.number * page.size + cases.size()}">6</span>
+                            of <span th:text="${page.totalElements}">42</span> entries
+                        </span>
+                        <span class="showing-text" th:unless="${page.totalElements > 0}">No entries</span>
+
+                        <nav class="pagination" th:if="${page.totalPages > 1}">
+                            <a th:href="@{/capital-gain-tax(taxYear=${filter.taxYear},clientType=${filter.clientType},assetType=${filter.assetType},status=${filter.status},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=0)}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&laquo;</a>
+                            <a th:href="@{/capital-gain-tax(taxYear=${filter.taxYear},clientType=${filter.clientType},assetType=${filter.assetType},status=${filter.status},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.number - 1})}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&lsaquo;</a>
+
+                            <th:block th:each="p : ${pageNumbers}">
+                                <span th:if="${p == -1}" class="page-ellipsis">&hellip;</span>
+                                <a th:unless="${p == -1}"
+                                   th:href="@{/capital-gain-tax(taxYear=${filter.taxYear},clientType=${filter.clientType},assetType=${filter.assetType},status=${filter.status},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${p - 1})}"
+                                   class="page-btn" th:classappend="${p - 1 == page.number} ? ' active'"
+                                   th:text="${p}">1</a>
+                            </th:block>
+
+                            <a th:href="@{/capital-gain-tax(taxYear=${filter.taxYear},clientType=${filter.clientType},assetType=${filter.assetType},status=${filter.status},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.number + 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&rsaquo;</a>
+                            <a th:href="@{/capital-gain-tax(taxYear=${filter.taxYear},clientType=${filter.clientType},assetType=${filter.assetType},status=${filter.status},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.totalPages - 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&raquo;</a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Right rail -->
+                <aside class="right-rail">
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>CGT Summary <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3></div>
+                        <div class="overview-body">
+                            <div class="overview-pie-wrap" style="width:128px;height:128px;">
+                                <canvas id="cgtSummaryDonut"></canvas>
+                                <div class="donut-center">
+                                    <span class="donut-center-value" style="font-size:17px;">£248,750</span>
+                                    <span class="donut-center-label">Total Tax Payable</span>
+                                </div>
+                            </div>
+                            <ul class="expense-legend">
+                                <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">Residential Property</span><span class="leg-amount">£117,450 (47.2%)</span></li>
+                                <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">Shares</span><span class="leg-amount">£68,660 (27.6%)</span></li>
+                                <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">Crypto Assets</span><span class="leg-amount">£32,140 (12.9%)</span></li>
+                                <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">Other Assets</span><span class="leg-amount">£30,500 (12.3%)</span></li>
+                            </ul>
+                        </div>
+                        <a href="#" class="see-all-link" style="display:block;text-align:center;margin-top:10px;padding-top:12px;border-top:1px solid #F2F5FA;">View full summary <i class="bi bi-arrow-right"></i></a>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Quick Actions</h3></div>
+                        <ul class="quick-actions">
+                            <li><a href="#"><i class="bi bi-file-earmark-plus-fill"></i> Start New CGT Enquiry <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-cloud-upload-fill"></i> Upload Disposal Details <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-calculator-fill"></i> CGT Calculation Tool <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-shield-check"></i> Annual Exempt Amount Checker <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-book-half"></i> Relief &amp; Allowance Guide <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-list-ul"></i> View All Clients <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Upcoming CGT Deadlines</h3><a href="#" class="head-link">View Calendar</a></div>
+                        <ul class="deadline-list">
+                            <li>
+                                <span class="date-chip chip-red" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">31</span><span class="chip-month">OCT</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Report &amp; Pay (31 Oct 2025)</span>
+                                    <span class="deadline-sub">John Miller</span>
+                                </span>
+                                <span class="deadline-pill pill-red">In 83 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-amber" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">31</span><span class="chip-month">JAN</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Report &amp; Pay (31 Jan 2026)</span>
+                                    <span class="deadline-sub">Sarah Patel</span>
+                                </span>
+                                <span class="deadline-pill pill-amber">In 175 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-green" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">30</span><span class="chip-month">APR</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Report &amp; Pay (30 Apr 2026)</span>
+                                    <span class="deadline-sub">Amit Kumar</span>
+                                </span>
+                                <span class="deadline-pill pill-green">In 264 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-violet" style="width:36px;height:36px;"><span class="chip-day" style="font-size:15px;">31</span><span class="chip-month">JUL</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Report &amp; Pay (31 Jul 2026)</span>
+                                    <span class="deadline-sub">David Wilson</span>
+                                </span>
+                                <span class="deadline-pill pill-violet">In 356 days</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="see-all-link"><i class="bi bi-plus"></i> View all deadlines</a>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- Bottom row: 3 cards -->
+            <section class="fr-bottom-row">
+                <article class="bk-expense-card">
+                    <h3>Gain / (Loss) Trend <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <div class="revenue-canvas-wrap" style="height:170px;"><canvas id="cgtTrendChart"></canvas></div>
+                    <div class="stat-box-row">
+                        <div class="stat-box">
+                            <p class="stat-box-label">Total Gains (This Year)</p>
+                            <p class="stat-box-value">£1,248,560</p>
+                        </div>
+                        <div class="stat-box">
+                            <p class="stat-box-label">vs last year</p>
+                            <p class="stat-box-value" style="color:#16A34A;">+18.7%</p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Gains by Asset Type <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <div class="expense-body">
+                        <div class="expense-donut-wrap" style="width:125px;height:125px;"><canvas id="cgtAssetDonut"></canvas></div>
+                        <ul class="expense-legend">
+                            <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">Residential Property</span><span class="leg-amount">£589,450</span><span class="leg-pct">47.2%</span></li>
+                            <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">Shares</span><span class="leg-amount">£345,600</span><span class="leg-pct">27.6%</span></li>
+                            <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">Crypto Assets</span><span class="leg-amount">£160,890</span><span class="leg-pct">12.9%</span></li>
+                            <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">Other Assets</span><span class="leg-amount">£152,620</span><span class="leg-pct">12.3%</span></li>
+                        </ul>
+                    </div>
+                    <div class="expense-total">Total Gains <b>£1,248,560</b></div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>CGT Status <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <ul class="service-list">
+                        <li>
+                            <span class="service-label" style="flex-basis:110px;">Filed</span>
+                            <span class="service-track"><span class="service-fill" style="width:43%;background:#22C55E;"></span></span>
+                            <span class="service-pct">36 (42.9%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:110px;">In Review</span>
+                            <span class="service-track"><span class="service-fill" style="width:13%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">11 (13.1%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:110px;">In Progress</span>
+                            <span class="service-track"><span class="service-fill" style="width:13%;background:#F59E0B;"></span></span>
+                            <span class="service-pct">11 (13.1%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:110px;">Documents Pending</span>
+                            <span class="service-track"><span class="service-fill" style="width:8%;background:#E2564F;"></span></span>
+                            <span class="service-pct">7 (8.3%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:110px;">Awaiting Info</span>
+                            <span class="service-track"><span class="service-fill" style="width:6%;background:#8B5CF6;"></span></span>
+                            <span class="service-pct">5 (6.0%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:110px;">Draft</span>
+                            <span class="service-track"><span class="service-fill" style="width:5%;background:#94A3B8;"></span></span>
+                            <span class="service-pct">4 (4.8%)</span>
+                        </li>
+                    </ul>
+                    <div class="expense-total">Total Cases <b>84</b></div>
+                </article>
+            </section>
+
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/webjars/chart.js/4.4.4/dist/chart.umd.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/capital-gain-tax.js}"></script>
+</body>
+</html>

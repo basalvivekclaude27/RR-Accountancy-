@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Business Plan Detail')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('business-plans')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Business Plans')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${plan.planName}">Plan Name</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/business-plans}"><i class="bi bi-arrow-left"></i> Back to Business Plans</a>
+                        </p>
+                    </div>
+                    <a th:href="@{/business-plans/{id}/edit(id=${plan.id})}" class="btn-primary-navy">
+                        <i class="bi bi-pencil"></i> Edit Plan
+                    </a>
+                </div>
+
+                <dl class="detail-grid">
+                    <div class="detail-item">
+                        <dt>Client Name</dt>
+                        <dd th:text="${plan.clientName}">Client</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Plan Reference</dt>
+                        <dd th:text="${plan.planRef}">BP-1001</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Plan Type</dt>
+                        <dd th:text="${plan.planType}">Growth Plan</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Industry</dt>
+                        <dd th:text="${plan.industry}">Technology</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Status</dt>
+                        <dd><span class="status-pill" th:classappend="'pill-' + ${plan.status}" th:text="${plan.status.label}">Status</span></dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Revenue Potential</dt>
+                        <dd th:text="${plan.revenuePotentialLabel}">£450,000</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Last Updated</dt>
+                        <dd th:text="${plan.lastUpdatedLabel}">08 Aug 2025</dd>
+                    </div>
+                </dl>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

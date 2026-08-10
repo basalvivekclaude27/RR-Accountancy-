@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Business Plans')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('business-plans')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Business Plans')}"></header>
+
+        <main class="content">
+
+            <div class="auth-alert info" th:if="${successMessage}">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${successMessage}">Saved</span>
+            </div>
+
+            <!-- Page header card -->
+            <section class="page-header-card">
+                <div class="page-header-row">
+                    <div>
+                        <h1 class="page-title">Business Plans</h1>
+                        <p class="page-sub">Strategic plans for sustainable growth. Clear roadmap. Better decisions. Stronger future.</p>
+                    </div>
+                    <a th:href="@{/business-plans/new}" class="btn-primary-navy">
+                        <i class="bi bi-plus-lg"></i> New Business Plan
+                    </a>
+                </div>
+
+                <div class="mini-kpi-row cols-6">
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-file-earmark-text-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Total Plans</p>
+                            <p class="mini-kpi-value">52</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+8 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-green"><i class="bi bi-clipboard2-check-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">In Progress</p>
+                            <p class="mini-kpi-value">18</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+4 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-amber"><i class="bi bi-check-circle-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Completed <span style="font-weight:400;color:#8494AC;">(Month)</span></p>
+                            <p class="mini-kpi-value">12</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+3 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-violet"><i class="bi bi-graph-up-arrow"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Active Plans</p>
+                            <p class="mini-kpi-value">34</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+12.5% vs last month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-pie-chart-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Success Rate</p>
+                            <p class="mini-kpi-value">87%</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+5% vs last month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon" style="background:#E4F7F5;color:#14B8A6;"><i class="bi bi-currency-pound"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Revenue Potential</p>
+                            <p class="mini-kpi-value">£2.45M</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+15.3% vs last month</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Main grid: filters / table / right rail -->
+            <section class="bk-grid">
+
+                <!-- Filters -->
+                <aside class="filters-card">
+                    <div class="filters-head"><i class="bi bi-funnel-fill"></i> Filters</div>
+
+                    <form id="filtersForm" method="get" th:action="@{/business-plans}">
+                        <div class="field-block">
+                            <label for="f-client">Client / Business</label>
+                            <select id="f-client" name="client">
+                                <option value="">All Clients</option>
+                                <option th:each="c : ${clientNames}" th:value="${c}" th:text="${c}"
+                                        th:selected="${c == filter.client}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-type">Plan Type</label>
+                            <select id="f-type" name="planType">
+                                <option value="">All Types</option>
+                                <option th:each="t : ${planTypes}" th:value="${t}" th:text="${t}"
+                                        th:selected="${t == filter.planType}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-status">Plan Status</label>
+                            <select id="f-status" name="status">
+                                <option value="">All Status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"
+                                        th:selected="${s == filter.status}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-industry">Industry</label>
+                            <select id="f-industry" name="industry">
+                                <option value="">All Industries</option>
+                                <option th:each="i : ${industries}" th:value="${i}" th:text="${i}"
+                                        th:selected="${i == filter.industry}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label>Date Range</label>
+                            <input type="date" name="dateFrom" th:value="${filter.dateFrom}" style="margin-bottom:8px;"/>
+                            <input type="date" name="dateTo" th:value="${filter.dateTo}"/>
+                        </div>
+
+                        <button type="submit" class="btn-apply">Apply Filters</button>
+                        <a th:href="@{/business-plans}" class="btn-reset">Reset</a>
+                    </form>
+                </aside>
+
+                <!-- Table -->
+                <div class="jobs-table-card">
+                    <div class="jobs-table-head">
+                        <h2>Business Plans Overview</h2>
+                        <div class="search-box">
+                            <input type="search" name="q" form="filtersForm" placeholder="Search by client or plan name..." th:value="${filter.q}"/>
+                            <i class="bi bi-search"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table class="jobs-table">
+                            <thead>
+                                <tr>
+                                    <th>Client / Business</th>
+                                    <th>Plan Name</th>
+                                    <th class="fy-col">Plan Type</th>
+                                    <th>Status</th>
+                                    <th>Last Updated</th>
+                                    <th class="num-col">Revenue Potential</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="plan, it : ${plans}">
+                                    <td>
+                                        <div class="client-cell">
+                                            <span class="client-avatar" th:classappend="'avatar-tint-' + ${it.index % 5}"
+                                                  th:text="${plan.initials}">JM</span>
+                                            <span class="client-info">
+                                                <span class="client-name" th:text="${plan.clientName}">Client</span>
+                                                <span class="client-ref" th:text="${plan.planRef}">BP-1001</span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td th:text="${plan.planName}">Plan Name</td>
+                                    <td class="fy-col" th:text="${plan.planType}">Growth Plan</td>
+                                    <td>
+                                        <span class="status-pill" th:classappend="'pill-' + ${plan.status}" th:text="${plan.status.label}">Status</span>
+                                    </td>
+                                    <td th:text="${plan.lastUpdatedLabel}">08 Aug 2025</td>
+                                    <td class="num-col" th:text="${plan.revenuePotentialLabel}">£450,000</td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <a th:href="@{/business-plans/{id}(id=${plan.id})}" class="row-action-btn" title="View"><i class="bi bi-eye"></i></a>
+                                            <a th:href="@{/business-plans/{id}/edit(id=${plan.id})}" class="row-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                                            <button type="button" class="row-action-btn" title="More (coming soon)"><i class="bi bi-three-dots-vertical"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(plans)}">
+                                    <td colspan="7" class="empty-row">No business plans match these filters.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-footer">
+                        <span class="showing-text" th:if="${page.totalElements > 0}">
+                            Showing <span th:text="${page.number * page.size + 1}">1</span>
+                            to <span th:text="${page.number * page.size + plans.size()}">6</span>
+                            of <span th:text="${page.totalElements}">52</span> entries
+                        </span>
+                        <span class="showing-text" th:unless="${page.totalElements > 0}">No entries</span>
+
+                        <nav class="pagination" th:if="${page.totalPages > 1}">
+                            <a th:href="@{/business-plans(client=${filter.client},planType=${filter.planType},status=${filter.status},industry=${filter.industry},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=0)}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&laquo;</a>
+                            <a th:href="@{/business-plans(client=${filter.client},planType=${filter.planType},status=${filter.status},industry=${filter.industry},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.number - 1})}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&lsaquo;</a>
+
+                            <a th:each="p : ${#numbers.sequence(0, page.totalPages - 1)}"
+                               th:href="@{/business-plans(client=${filter.client},planType=${filter.planType},status=${filter.status},industry=${filter.industry},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${p})}"
+                               class="page-btn" th:classappend="${p == page.number} ? ' active'"
+                               th:text="${p + 1}">1</a>
+
+                            <a th:href="@{/business-plans(client=${filter.client},planType=${filter.planType},status=${filter.status},industry=${filter.industry},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.number + 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&rsaquo;</a>
+                            <a th:href="@{/business-plans(client=${filter.client},planType=${filter.planType},status=${filter.status},industry=${filter.industry},dateFrom=${filter.dateFrom},dateTo=${filter.dateTo},q=${filter.q},page=${page.totalPages - 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&raquo;</a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Right rail -->
+                <aside class="right-rail">
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Plan Status Distribution</h3></div>
+                        <div class="overview-body">
+                            <div class="overview-pie-wrap" style="width:125px;height:125px;">
+                                <canvas id="statusDistDonut"></canvas>
+                                <div class="donut-center">
+                                    <span class="donut-center-value" style="font-size:22px;">52</span>
+                                    <span class="donut-center-label">Total Plans</span>
+                                </div>
+                            </div>
+                            <ul class="expense-legend">
+                                <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">In Progress</span><span class="leg-amount">18 (34.6%)</span></li>
+                                <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">Completed</span><span class="leg-amount">12 (23.1%)</span></li>
+                                <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">Pending Review</span><span class="leg-amount">8 (15.4%)</span></li>
+                                <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">On Hold</span><span class="leg-amount">6 (11.5%)</span></li>
+                                <li><span class="dot" style="background:#14B8A6;"></span><span class="leg-label">Not Started</span><span class="leg-amount">8 (15.4%)</span></li>
+                            </ul>
+                        </div>
+                        <a href="#" class="see-all-link" style="display:block;text-align:center;margin-top:10px;padding-top:12px;border-top:1px solid #F2F5FA;">View full report <i class="bi bi-arrow-right"></i></a>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Quick Actions</h3></div>
+                        <ul class="quick-actions">
+                            <li><a href="#"><i class="bi bi-file-earmark-plus-fill"></i> Create New Business Plan <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-collection-fill"></i> Business Plan Template Library <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-calculator-fill"></i> Financial Projection Builder <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-grid-3x3-gap-fill"></i> SWOT Analysis Tool <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-download"></i> Download Business Plan Template <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-list-ul"></i> View All Business Plans <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Upcoming Reviews</h3><a href="#" class="head-link">View Calendar</a></div>
+                        <ul class="deadline-list">
+                            <li>
+                                <span class="date-chip" style="width:36px;height:36px;background:#E8F0FE;color:#2E5BFF;"><span class="chip-day" style="font-size:14px;">12</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">5 Year Growth Plan Review</span>
+                                    <span class="deadline-sub">John Miller</span>
+                                </span>
+                                <span class="deadline-pill" style="background:#E8F0FE;color:#2E5BFF;">In 2 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip" style="width:36px;height:36px;background:#E6F6EC;color:#16A34A;"><span class="chip-day" style="font-size:14px;">15</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Investor Pitch Deck Review</span>
+                                    <span class="deadline-sub">Lisa Roberts</span>
+                                </span>
+                                <span class="deadline-pill" style="background:#E6F6EC;color:#16A34A;">In 5 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-amber" style="width:36px;height:36px;"><span class="chip-day" style="font-size:14px;">20</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Expansion Plan Review</span>
+                                    <span class="deadline-sub">Amit Kumar</span>
+                                </span>
+                                <span class="deadline-pill pill-amber">In 10 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-violet" style="width:36px;height:36px;"><span class="chip-day" style="font-size:14px;">28</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Operational Plan Review</span>
+                                    <span class="deadline-sub">David Wilson</span>
+                                </span>
+                                <span class="deadline-pill pill-violet">In 18 days</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="see-all-link"><i class="bi bi-plus"></i> View all reviews</a>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- Bottom row: 3 cards -->
+            <section class="fr-bottom-row">
+                <article class="bk-expense-card">
+                    <div class="chart-card-head" style="margin-bottom:16px;">
+                        <h3 style="margin:0;">Revenue Potential Trend</h3>
+                        <select class="year-select" aria-label="Revenue potential period">
+                            <option>This Financial Year</option>
+                            <option>Last Financial Year</option>
+                        </select>
+                    </div>
+                    <div class="revenue-canvas-wrap" style="height:170px;"><canvas id="revenueTrendChart"></canvas></div>
+                    <div class="chart-legend-row">
+                        <span><i class="legend-swatch" style="background:#2E5BFF;"></i> Revenue Potential</span>
+                    </div>
+                    <div class="expense-total">Total Revenue Potential <b>£2.45M</b></div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Plans by Type</h3>
+                    <div class="expense-body">
+                        <div class="expense-donut-wrap" style="width:125px;height:125px;"><canvas id="typeDonut"></canvas></div>
+                        <ul class="expense-legend">
+                            <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">Growth Plan</span><span class="leg-amount">18 (34.6%)</span></li>
+                            <li><span class="dot" style="background:#14B8A6;"></span><span class="leg-label">Startup Plan</span><span class="leg-amount">12 (23.1%)</span></li>
+                            <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">Expansion Plan</span><span class="leg-amount">8 (15.4%)</span></li>
+                            <li><span class="dot" style="background:#F97316;"></span><span class="leg-label">Operational Plan</span><span class="leg-amount">6 (11.5%)</span></li>
+                            <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">Others</span><span class="leg-amount">8 (15.4%)</span></li>
+                        </ul>
+                    </div>
+                    <div class="expense-total">Total Plans <b>52</b></div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Top Industries</h3>
+                    <ul class="service-list">
+                        <li>
+                            <span class="service-label" style="flex-basis:80px;">Technology</span>
+                            <span class="service-track"><span class="service-fill" style="width:31%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">16 (30.8%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:80px;">Retail</span>
+                            <span class="service-track"><span class="service-fill" style="width:19%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">10 (19.2%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:80px;">Healthcare</span>
+                            <span class="service-track"><span class="service-fill" style="width:15%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">8 (15.4%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:80px;">Construction</span>
+                            <span class="service-track"><span class="service-fill" style="width:12%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">6 (11.5%)</span>
+                        </li>
+                        <li>
+                            <span class="service-label" style="flex-basis:80px;">Others</span>
+                            <span class="service-track"><span class="service-fill" style="width:23%;background:#2E5BFF;"></span></span>
+                            <span class="service-pct">12 (23.1%)</span>
+                        </li>
+                    </ul>
+                    <div class="expense-total">Total Plans <b>52</b></div>
+                </article>
+            </section>
+
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/webjars/chart.js/4.4.4/dist/chart.umd.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/business-plans.js}"></script>
+</body>
+</html>

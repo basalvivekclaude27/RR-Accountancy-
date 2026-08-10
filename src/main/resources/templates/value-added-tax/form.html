@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${formTitle})}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('value-added-tax')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Value Added Tax (VAT)')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${formTitle}">New VAT Enquiry</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/value-added-tax}"><i class="bi bi-arrow-left"></i> Back to Value Added Tax (VAT)</a>
+                        </p>
+                    </div>
+                </div>
+
+                <form th:action="@{${formAction}}" th:object="${returnForm}" method="post" class="job-form" novalidate>
+
+                    <div class="job-form-grid">
+                        <div class="field-block">
+                            <label for="clientName">Client Name</label>
+                            <input type="text" id="clientName" th:field="*{clientName}" placeholder="e.g. John Miller Ltd"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('clientName')}" th:errors="*{clientName}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="vatNumber">VAT Number</label>
+                            <input type="text" id="vatNumber" th:field="*{vatNumber}" placeholder="e.g. GB 123 4567 89"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('vatNumber')}" th:errors="*{vatNumber}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="clientType">Client Type</label>
+                            <input type="text" id="clientType" th:field="*{clientType}" placeholder="e.g. Limited Company"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('clientType')}" th:errors="*{clientType}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="schemeType">Scheme Type</label>
+                            <input type="text" id="schemeType" th:field="*{schemeType}" placeholder="e.g. Standard Rate"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('schemeType')}" th:errors="*{schemeType}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="periodStart">VAT Period Start</label>
+                            <input type="date" id="periodStart" th:field="*{periodStart}"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('periodStart')}" th:errors="*{periodStart}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="salesExVat">Sales (Ex VAT) (£)</label>
+                            <input type="number" id="salesExVat" th:field="*{salesExVat}" step="0.01" placeholder="e.g. 45200"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('salesExVat')}" th:errors="*{salesExVat}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="purchasesExVat">Purchases (Ex VAT) (£)</label>
+                            <input type="number" id="purchasesExVat" th:field="*{purchasesExVat}" step="0.01" placeholder="e.g. 28600"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('purchasesExVat')}" th:errors="*{purchasesExVat}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="vatAmount">VAT Payable / (Refund) (£)</label>
+                            <input type="number" id="vatAmount" th:field="*{vatAmount}" step="0.01" placeholder="e.g. 3320 (use negative for a refund)"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('vatAmount')}" th:errors="*{vatAmount}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="status">Status</label>
+                            <select id="status" th:field="*{status}">
+                                <option value="">Select status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"></option>
+                            </select>
+                            <div class="field-error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="filedOn">Filed On</label>
+                            <input type="date" id="filedOn" th:field="*{filedOn}"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('filedOn')}" th:errors="*{filedOn}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="assignedTo">Assigned To</label>
+                            <input type="text" id="assignedTo" th:field="*{assignedTo}" placeholder="Staff member name"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('assignedTo')}" th:errors="*{assignedTo}"></div>
+                        </div>
+                    </div>
+
+                    <div class="job-form-actions">
+                        <a th:href="@{/value-added-tax}" class="btn-reset">Cancel</a>
+                        <button type="submit" class="btn-apply"><i class="bi bi-check-lg"></i> Save Return</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

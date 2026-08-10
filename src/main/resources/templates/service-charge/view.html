@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Service Charge Detail')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('service-charge')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Service Charge Accounts')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${account.propertyName}">Property Name</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/service-charge}"><i class="bi bi-arrow-left"></i> Back to Service Charge Accounts</a>
+                        </p>
+                    </div>
+                    <a th:href="@{/service-charge/{id}/edit(id=${account.id})}" class="btn-primary-navy">
+                        <i class="bi bi-pencil"></i> Edit Account
+                    </a>
+                </div>
+
+                <dl class="detail-grid">
+                    <div class="detail-item">
+                        <dt>Account Reference</dt>
+                        <dd th:text="${account.propertyRef}">MC-1001</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Unit(s)</dt>
+                        <dd th:text="${account.units}">24</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Financial Year</dt>
+                        <dd th:text="${account.financialYearLabel}">2024 - 2025</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Period</dt>
+                        <dd th:text="${account.periodLabel}">Jul 2025</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Budgeted Amount</dt>
+                        <dd th:text="${account.budgetedAmountLabel}">£18,600</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Collected Amount</dt>
+                        <dd th:text="${account.collectedAmountLabel}">£15,680</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Collection %</dt>
+                        <dd th:text="${account.collectionPercent} + '%'">84%</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Status</dt>
+                        <dd><span class="status-pill" th:classappend="'pill-' + ${account.status}" th:text="${account.status.label}">Status</span></dd>
+                    </div>
+                </dl>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

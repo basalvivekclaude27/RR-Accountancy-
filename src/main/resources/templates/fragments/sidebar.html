@@ -39,16 +39,56 @@
                 <i class="bi bi-pie-chart-fill"></i><span>Budgeting &amp; Forecasting</span>
             </a>
         </li>
-        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-building"></i><span>Service Charge Accounts</span></a></li>
-        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-rocket-takeoff-fill"></i><span>Business Startup</span></a></li>
-        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-file-earmark-text-fill"></i><span>Company Formation</span></a></li>
-        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-clipboard-data-fill"></i><span>Business Plans</span></a></li>
-        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-person-vcard-fill"></i><span>Personal Income Tax</span></a></li>
-        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-briefcase-fill"></i><span>Business Income Tax</span></a></li>
-        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-bank"></i><span>Corporation Tax</span></a></li>
-        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-receipt-cutoff"></i><span>Value Added Tax (VAT)</span></a></li>
-        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-graph-up-arrow"></i><span>Capital Gain Tax</span></a></li>
-        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-shield-fill-check"></i><span>Inheritance Tax</span></a></li>
+        <li>
+            <a th:href="@{/service-charge}" class="nav-item" th:classappend="${active == 'service-charge'} ? ' active' : ''">
+                <i class="bi bi-building"></i><span>Service Charge Accounts</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/business-startup}" class="nav-item" th:classappend="${active == 'business-startup'} ? ' active' : ''">
+                <i class="bi bi-rocket-takeoff-fill"></i><span>Business Startup</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/company-formation}" class="nav-item" th:classappend="${active == 'company-formation'} ? ' active' : ''">
+                <i class="bi bi-file-earmark-text-fill"></i><span>Company Formation</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/business-plans}" class="nav-item" th:classappend="${active == 'business-plans'} ? ' active' : ''">
+                <i class="bi bi-clipboard-data-fill"></i><span>Business Plans</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/personal-income-tax}" class="nav-item" th:classappend="${active == 'personal-income-tax'} ? ' active' : ''">
+                <i class="bi bi-person-vcard-fill"></i><span>Personal Income Tax</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/business-income-tax}" class="nav-item" th:classappend="${active == 'business-income-tax'} ? ' active' : ''">
+                <i class="bi bi-briefcase-fill"></i><span>Business Income Tax</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/corporation-tax}" class="nav-item" th:classappend="${active == 'corporation-tax'} ? ' active' : ''">
+                <i class="bi bi-bank"></i><span>Corporation Tax</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/value-added-tax}" class="nav-item" th:classappend="${active == 'value-added-tax'} ? ' active' : ''">
+                <i class="bi bi-receipt-cutoff"></i><span>Value Added Tax (VAT)</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/capital-gain-tax}" class="nav-item" th:classappend="${active == 'capital-gain-tax'} ? ' active' : ''">
+                <i class="bi bi-graph-up-arrow"></i><span>Capital Gain Tax</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/inheritance-tax}" class="nav-item" th:classappend="${active == 'inheritance-tax'} ? ' active' : ''">
+                <i class="bi bi-shield-fill-check"></i><span>Inheritance Tax</span>
+            </a>
+        </li>
     </ul>
 
     <div class="sidebar-trust">

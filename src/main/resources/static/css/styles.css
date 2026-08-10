@@ -794,6 +794,7 @@ body {
 .chip-red { background: #FDECEC; color: var(--dash-red); }
 .chip-amber { background: #FEF2E3; color: #D98324; }
 .chip-violet { background: #F1ECFE; color: #7C5CE0; }
+.chip-green { background: #E8F6EC; color: #16A34A; }
 .deadline-text { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
 .deadline-title { font-size: 14px; font-weight: 600; color: #1B3358; }
 .deadline-sub { font-size: 12.5px; color: #7A8AA3; }
@@ -801,6 +802,7 @@ body {
 .pill-red { background: #FDECEC; color: var(--dash-red); }
 .pill-amber { background: #FEF2E3; color: #D98324; }
 .pill-violet { background: #F1ECFE; color: #7C5CE0; }
+.pill-green { background: #E8F6EC; color: #16A34A; }
 
 .stats-strip {
     background: #fff;
@@ -875,6 +877,17 @@ body {
 .btn-primary-navy:hover { filter: brightness(1.1); color: #fff; }
 
 .mini-kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 20px; }
+.mini-kpi-row.cols-6 { grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.mini-kpi-row.cols-6 .mini-kpi { padding: 14px; }
+.mini-kpi-row.cols-6 .mini-kpi-icon { width: 44px; height: 44px; font-size: 18px; }
+.mini-kpi-row.cols-6 .mini-kpi-value { font-size: 24px; }
+.mini-kpi-row.cols-6 .mini-kpi-label { font-size: 13px; }
+.mini-kpi-row.cols-6 .mini-kpi-foot { font-size: 12px; }
+
+.stat-box-row { display: flex; gap: 12px; margin-top: 14px; }
+.stat-box { flex: 1 1 0; border: 1px solid var(--dash-border); border-radius: 10px; padding: 12px; text-align: center; }
+.stat-box-label { font-size: 12.5px; color: var(--muted); margin: 0; }
+.stat-box-value { font-size: 20px; font-weight: 700; color: var(--navy-deep); margin: 2px 0 0; }
 .mini-kpi {
     background: #fff;
     border: 1px solid var(--dash-border);
@@ -982,6 +995,24 @@ body {
 .client-name { font-size: 14px; font-weight: 600; color: #1B3358; white-space: nowrap; }
 .client-ref { font-size: 12.5px; color: #7A8AA3; }
 
+.property-thumb {
+    width: 34px; height: 34px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; color: #4A5B75;
+}
+
+.collect-cell { display: flex; flex-direction: column; gap: 4px; min-width: 62px; }
+.collect-pct { font-size: 12.5px; font-weight: 600; color: #33455F; }
+.collect-track { display: block; width: 58px; height: 5px; border-radius: 3px; background: var(--dash-border); overflow: hidden; }
+.collect-fill { display: block; height: 100%; border-radius: 3px; }
+.collect-fill.fill-green { background: #22C55E; }
+.collect-fill.fill-amber { background: #F59E0B; }
+.collect-fill.fill-orange { background: #F97316; }
+
+@media (max-width: 1440px) {
+    .fy-col { display: none; }
+}
+
 .status-pill { display: inline-block; border-radius: 999px; font-size: 12px; font-weight: 600; padding: 4px 12px; white-space: nowrap; }
 .pill-IN_PROGRESS { background: #E8F0FE; color: #1D4ED8; }
 .pill-PENDING_REVIEW { background: #FEF3DE; color: #B45309; }
@@ -991,6 +1022,47 @@ body {
 .pill-PENDING_APPROVAL { background: #FEF3DE; color: #B45309; }
 .pill-PAID { background: #E6F6EC; color: #15803D; }
 .pill-APPROVED { background: #E6F6EC; color: #15803D; }
+.pill-ON_TRACK { background: #E6F6EC; color: #15803D; }
+.pill-ATTENTION { background: #FEF3DE; color: #B45309; }
+.pill-BEHIND { background: #FDECEC; color: #DC2626; }
+
+/* Business Startup: stage + status pills */
+.pill-BUSINESS_PLAN { background: #FEF3DE; color: #B45309; }
+.pill-COMPANY_FORMATION { background: #E8F0FE; color: #1D4ED8; }
+.pill-REGISTRATION { background: #F1EAFD; color: #6D28D9; }
+.pill-DOCUMENT_SETUP { background: #FEEDE0; color: #C2410C; }
+.pill-LAUNCHED { background: #E6F6EC; color: #15803D; }
+.pill-NEW { background: #F1F4F9; color: #5A6B85; }
+.pill-AWAITING_INFO { background: #FEF3DE; color: #B45309; }
+
+/* Company Formation: stage + status pills */
+.pill-NAME_RESERVATION { background: #F1EAFD; color: #6D28D9; }
+.pill-INCORPORATION { background: #E8F0FE; color: #1D4ED8; }
+.pill-DOCUMENTS { background: #FEF3DE; color: #B45309; }
+.pill-REVIEW { background: #FEEDE0; color: #C2410C; }
+.pill-PENDING { background: #FEF3DE; color: #B45309; }
+
+/* Business Plans: status pills */
+.pill-ON_HOLD { background: #F1EAFD; color: #6D28D9; }
+.pill-NOT_STARTED { background: #F1F4F9; color: #5A6B85; }
+
+/* Personal Income Tax: status pills */
+.pill-PROCESSING { background: #FEF3DE; color: #B45309; }
+.pill-DOCUMENTS_PENDING { background: #FEEDE0; color: #C2410C; }
+.pill-IN_REVIEW { background: #E8F0FE; color: #1D4ED8; }
+.pill-FILED { background: #E6F6EC; color: #15803D; }
+.pill-REFUND_ISSUED { background: #E6F6EC; color: #15803D; }
+
+/* CSS funnel chart (Startup Pipeline) */
+.funnel-body { display: flex; align-items: center; gap: 20px; }
+.funnel-chart { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 130px; flex-shrink: 0; }
+.funnel-band {
+    height: 28px;
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+}
+.funnel-chart .funnel-band:last-child {
+    clip-path: polygon(0 0, 100% 0, 78% 100%, 22% 100%);
+}
 
 .num-col { text-align: right; }
 td.num-col { font-weight: 600; color: #33455F; }
@@ -1022,6 +1094,10 @@ td.num-col { font-weight: 600; color: #33455F; }
 .page-btn:hover { background: var(--dash-page-bg); }
 .page-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 .page-btn.disabled { opacity: .4; pointer-events: none; }
+.page-ellipsis {
+    width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: var(--muted);
+}
 
 .right-rail { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
 .rail-card { padding: 18px 20px; }
@@ -1136,7 +1212,12 @@ td.num-col { font-weight: 600; color: #33455F; }
 /* ---- Responsive ---- */
 @media (max-width: 1440px) {
     .mini-kpi-row { grid-template-columns: repeat(3, 1fr); }
+    .mini-kpi-row.cols-6 { grid-template-columns: repeat(3, 1fr); }
     .fr-bottom-row { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+    .mini-kpi-row.cols-6 { grid-template-columns: 1fr; }
+    .stat-box-row { flex-direction: column; }
 }
 @media (max-width: 1280px) {
     .bk-grid { grid-template-columns: 220px 1fr; }

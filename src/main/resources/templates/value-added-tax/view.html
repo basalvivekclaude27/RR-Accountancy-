@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('VAT Return Detail')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('value-added-tax')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Value Added Tax (VAT)')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${vatReturn.clientName}">Client Ltd</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/value-added-tax}"><i class="bi bi-arrow-left"></i> Back to Value Added Tax (VAT)</a>
+                        </p>
+                    </div>
+                    <a th:href="@{/value-added-tax/{id}/edit(id=${vatReturn.id})}" class="btn-primary-navy">
+                        <i class="bi bi-pencil"></i> Edit Return
+                    </a>
+                </div>
+
+                <dl class="detail-grid">
+                    <div class="detail-item">
+                        <dt>VAT Number</dt>
+                        <dd th:text="${vatReturn.vatNumber}">GB 123 4567 89</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Client Type</dt>
+                        <dd th:text="${vatReturn.clientType}">Limited Company</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Scheme Type</dt>
+                        <dd th:text="${vatReturn.schemeType}">Standard Rate</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>VAT Period</dt>
+                        <dd th:text="${vatReturn.periodLabel + ' ' + vatReturn.fiscalQuarterLabel}">Apr - Jun 2025 (Q1 2025/26)</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Sales (Ex VAT)</dt>
+                        <dd th:text="${vatReturn.salesLabel}">£45,200</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Purchases (Ex VAT)</dt>
+                        <dd th:text="${vatReturn.purchasesLabel}">£28,600</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>VAT Payable / (Refund)</dt>
+                        <dd style="color:#E2564F;font-weight:600;" th:text="${vatReturn.vatAmountLabel}">£3,320</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Status</dt>
+                        <dd><span class="status-pill" th:classappend="'pill-' + ${vatReturn.status}" th:text="${vatReturn.status.label}">Status</span></dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Filed On</dt>
+                        <dd th:text="${vatReturn.filedOnLabel}">01 Aug 2025</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Assigned To</dt>
+                        <dd th:text="${vatReturn.assignedTo}">Staff</dd>
+                    </div>
+                </dl>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

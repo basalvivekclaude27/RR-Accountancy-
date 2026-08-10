@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${formTitle})}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('corporation-tax')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Corporate Tax')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${formTitle}">New Corporate Tax Enquiry</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/corporation-tax}"><i class="bi bi-arrow-left"></i> Back to Corporate Tax</a>
+                        </p>
+                    </div>
+                </div>
+
+                <form th:action="@{${formAction}}" th:object="${returnForm}" method="post" class="job-form" novalidate>
+
+                    <div class="job-form-grid">
+                        <div class="field-block">
+                            <label for="clientName">Client Name</label>
+                            <input type="text" id="clientName" th:field="*{clientName}" placeholder="e.g. John Miller Ltd"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('clientName')}" th:errors="*{clientName}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="utr">UTR (10 digits)</label>
+                            <input type="text" id="utr" th:field="*{utr}" placeholder="e.g. 1234567890" maxlength="10"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('utr')}" th:errors="*{utr}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="clientType">Client Type</label>
+                            <input type="text" id="clientType" th:field="*{clientType}" placeholder="e.g. Limited Company"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('clientType')}" th:errors="*{clientType}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="industry">Industry</label>
+                            <input type="text" id="industry" th:field="*{industry}" placeholder="e.g. Professional Services"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('industry')}" th:errors="*{industry}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="accountingPeriodStart">Accounting Period Start</label>
+                            <input type="date" id="accountingPeriodStart" th:field="*{accountingPeriodStart}"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('accountingPeriodStart')}" th:errors="*{accountingPeriodStart}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="accountingPeriodEnd">Accounting Period End</label>
+                            <input type="date" id="accountingPeriodEnd" th:field="*{accountingPeriodEnd}"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('accountingPeriodEnd')}" th:errors="*{accountingPeriodEnd}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="taxableProfit">Taxable Profit (£)</label>
+                            <input type="number" id="taxableProfit" th:field="*{taxableProfit}" step="0.01" placeholder="e.g. 285600"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('taxableProfit')}" th:errors="*{taxableProfit}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="taxPayable">Tax Payable (£)</label>
+                            <input type="number" id="taxPayable" th:field="*{taxPayable}" step="0.01" min="0" placeholder="e.g. 57120"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('taxPayable')}" th:errors="*{taxPayable}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="status">Status</label>
+                            <select id="status" th:field="*{status}">
+                                <option value="">Select status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"></option>
+                            </select>
+                            <div class="field-error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="dueDate">Due Date</label>
+                            <input type="date" id="dueDate" th:field="*{dueDate}"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="assignedTo">Assigned To</label>
+                            <input type="text" id="assignedTo" th:field="*{assignedTo}" placeholder="Staff member name"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('assignedTo')}" th:errors="*{assignedTo}"></div>
+                        </div>
+                    </div>
+
+                    <div class="job-form-actions">
+                        <a th:href="@{/corporation-tax}" class="btn-reset">Cancel</a>
+                        <button type="submit" class="btn-apply"><i class="bi bi-check-lg"></i> Save Return</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
