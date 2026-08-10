@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Financial &amp; Management Accounts')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('financial-reports')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Financial &amp; Management Accounts')}"></header>
+
+        <main class="content">
+
+            <div class="auth-alert info" th:if="${successMessage}">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${successMessage}">Saved</span>
+            </div>
+
+            <!-- Page header card -->
+            <section class="page-header-card">
+                <div class="page-header-row">
+                    <div>
+                        <h1 class="page-title">Financial &amp; Management Accounts</h1>
+                        <p class="page-sub">Clear insights. Smarter decisions. Stronger business performance.</p>
+                    </div>
+                    <a th:href="@{/financial-reports/new}" class="btn-primary-navy">
+                        <i class="bi bi-plus-lg"></i> New Report / Account
+                    </a>
+                </div>
+
+                <div class="mini-kpi-row">
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Total Clients</p>
+                            <p class="mini-kpi-value">96</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+8 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-green"><i class="bi bi-file-earmark-text-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Reports Generated</p>
+                            <p class="mini-kpi-value">78</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+12 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-amber"><i class="bi bi-currency-pound"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">This Month Revenue</p>
+                            <p class="mini-kpi-value">£96,450</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+14.3% vs last month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-violet"><i class="bi bi-graph-up-arrow"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Gross Profit <span style="font-weight:400;color:#8494AC;">(This Month)</span></p>
+                            <p class="mini-kpi-value">£38,760</p>
+                            <p class="mini-kpi-foot" style="color:#8B5CF6;">40.2% of Revenue</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-wallet2"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Year to Date Profit</p>
+                            <p class="mini-kpi-value">£186,320</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+21.6% vs last year</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Main grid: filters / table / right rail -->
+            <section class="bk-grid">
+
+                <!-- Filters -->
+                <aside class="filters-card">
+                    <div class="filters-head"><i class="bi bi-funnel-fill"></i> Filters</div>
+
+                    <form id="filtersForm" method="get" th:action="@{/financial-reports}">
+                        <div class="field-block">
+                            <label for="f-client">Client</label>
+                            <select id="f-client" name="client">
+                                <option value="">All Clients</option>
+                                <option th:each="c : ${clientNames}" th:value="${c}" th:text="${c}"
+                                        th:selected="${c == filter.client}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-fy">Financial Year</label>
+                            <select id="f-fy" name="financialYear">
+                                <option value="">All Years</option>
+                                <option th:each="y : ${financialYears}" th:value="${y}"
+                                        th:text="|${y} - ${y + 1}|"
+                                        th:selected="${y == filter.financialYear}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-type">Report Type</label>
+                            <select id="f-type" name="reportType">
+                                <option value="">All Types</option>
+                                <option th:each="t : ${reportTypes}" th:value="${t}" th:text="${t.label}"
+                                        th:selected="${t == filter.reportType}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-period">Period</label>
+                            <input type="month" id="f-period" name="period" th:value="${filter.period}"/>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-status">Status</label>
+                            <select id="f-status" name="status">
+                                <option value="">All Status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"
+                                        th:selected="${s == filter.status}"></option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-apply">Apply Filters</button>
+                        <a th:href="@{/financial-reports}" class="btn-reset">Reset</a>
+                    </form>
+                </aside>
+
+                <!-- Reports table -->
+                <div class="jobs-table-card">
+                    <div class="jobs-table-head">
+                        <h2>Financial &amp; Management Reports</h2>
+                        <div class="search-box">
+                            <input type="search" name="q" form="filtersForm" placeholder="Search client or report..." th:value="${filter.q}"/>
+                            <i class="bi bi-search"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table class="jobs-table">
+                            <thead>
+                                <tr>
+                                    <th>Client / Business</th>
+                                    <th>Report Type</th>
+                                    <th>Period / Year</th>
+                                    <th>Status</th>
+                                    <th>Generated On</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="report, it : ${reports}">
+                                    <td>
+                                        <div class="client-cell">
+                                            <span class="client-avatar" th:classappend="'avatar-tint-' + ${it.index % 5}"
+                                                  th:text="${report.initials}">ABC</span>
+                                            <span class="client-name" th:text="${report.clientName}">Client</span>
+                                        </div>
+                                    </td>
+                                    <td th:text="${report.reportType.label}">Management Accounts</td>
+                                    <td th:text="${report.periodLabel}">Jul 2025</td>
+                                    <td>
+                                        <span class="status-pill" th:classappend="'pill-' + ${report.status}" th:text="${report.status.label}">Status</span>
+                                    </td>
+                                    <td th:text="${report.generatedOnLabel}">08 Aug 2025</td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <a th:href="@{/financial-reports/{id}(id=${report.id})}" class="row-action-btn" title="View"><i class="bi bi-eye"></i></a>
+                                            <a th:href="@{/financial-reports/{id}/download(id=${report.id})}" class="row-action-btn" title="Download"><i class="bi bi-download"></i></a>
+                                            <button type="button" class="row-action-btn" title="More (coming soon)"><i class="bi bi-three-dots-vertical"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(reports)}">
+                                    <td colspan="6" class="empty-row">No reports match these filters.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-footer">
+                        <span class="showing-text" th:if="${page.totalElements > 0}">
+                            Showing <span th:text="${page.number * page.size + 1}">1</span>
+                            to <span th:text="${page.number * page.size + reports.size()}">6</span>
+                            of <span th:text="${page.totalElements}">78</span> entries
+                        </span>
+                        <span class="showing-text" th:unless="${page.totalElements > 0}">No entries</span>
+
+                        <nav class="pagination" th:if="${page.totalPages > 1}">
+                            <a th:href="@{/financial-reports(client=${filter.client},financialYear=${filter.financialYear},reportType=${filter.reportType},period=${filter.period},status=${filter.status},q=${filter.q},page=0)}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&laquo;</a>
+                            <a th:href="@{/financial-reports(client=${filter.client},financialYear=${filter.financialYear},reportType=${filter.reportType},period=${filter.period},status=${filter.status},q=${filter.q},page=${page.number - 1})}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&lsaquo;</a>
+
+                            <a th:each="p : ${#numbers.sequence(0, page.totalPages - 1)}"
+                               th:href="@{/financial-reports(client=${filter.client},financialYear=${filter.financialYear},reportType=${filter.reportType},period=${filter.period},status=${filter.status},q=${filter.q},page=${p})}"
+                               class="page-btn" th:classappend="${p == page.number} ? ' active'"
+                               th:text="${p + 1}">1</a>
+
+                            <a th:href="@{/financial-reports(client=${filter.client},financialYear=${filter.financialYear},reportType=${filter.reportType},period=${filter.period},status=${filter.status},q=${filter.q},page=${page.number + 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&rsaquo;</a>
+                            <a th:href="@{/financial-reports(client=${filter.client},financialYear=${filter.financialYear},reportType=${filter.reportType},period=${filter.period},status=${filter.status},q=${filter.q},page=${page.totalPages - 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&raquo;</a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Right rail -->
+                <aside class="right-rail">
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Financial Overview <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Month)</span></h3><a href="#" class="head-link">View All</a></div>
+                        <ul class="overview-list">
+                            <li>
+                                <span class="ov-icon tint-blue"><i class="bi bi-currency-pound"></i></span>
+                                <span class="ov-label">Revenue</span>
+                                <span class="ov-amount">£96,450</span>
+                                <span class="ov-delta">+14.3%</span>
+                            </li>
+                            <li>
+                                <span class="ov-icon tint-amber"><i class="bi bi-box-seam"></i></span>
+                                <span class="ov-label">Cost of Sales</span>
+                                <span class="ov-amount">£57,690</span>
+                                <span class="ov-delta">+9.8%</span>
+                            </li>
+                            <li>
+                                <span class="ov-icon tint-green"><i class="bi bi-graph-up"></i></span>
+                                <span class="ov-label">Gross Profit</span>
+                                <span class="ov-amount">£38,760</span>
+                                <span class="ov-delta">+21.1%</span>
+                            </li>
+                            <li>
+                                <span class="ov-icon" style="background:#FDECEC;color:#E2564F;"><i class="bi bi-receipt"></i></span>
+                                <span class="ov-label">Operating Expenses</span>
+                                <span class="ov-amount">£22,340</span>
+                                <span class="ov-delta">+6.2%</span>
+                            </li>
+                            <li>
+                                <span class="ov-icon tint-violet"><i class="bi bi-wallet2"></i></span>
+                                <span class="ov-label">Net Profit</span>
+                                <span class="ov-amount">£16,420</span>
+                                <span class="ov-delta">+26.4%</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Quick Actions</h3></div>
+                        <ul class="quick-actions">
+                            <li><a href="#"><i class="bi bi-file-earmark-bar-graph-fill"></i> Generate Management Report <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-file-earmark-text-fill"></i> Generate Financial Statements <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-graph-up-arrow"></i> Cash Flow Projection <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-bar-chart-steps"></i> Variance Analysis <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-arrow-left-right"></i> Compare Periods <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-box-arrow-up-right"></i> Export Data <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Upcoming Reports</h3><a href="#" class="head-link">View Calendar</a></div>
+                        <ul class="deadline-list">
+                            <li>
+                                <span class="date-chip chip-red" style="width:40px;height:40px;"><span class="chip-day" style="font-size:16px;">15</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Management Accounts - Jul 2025</span>
+                                    <span class="deadline-sub">ABC Solutions Ltd.</span>
+                                </span>
+                                <span class="deadline-pill pill-red">In 6 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-amber" style="width:40px;height:40px;"><span class="chip-day" style="font-size:16px;">20</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Financial Statements - Jul 2025</span>
+                                    <span class="deadline-sub">XYZ Retail Ltd.</span>
+                                </span>
+                                <span class="deadline-pill pill-amber">In 11 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-violet" style="width:40px;height:40px;"><span class="chip-day" style="font-size:16px;">28</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Cash Flow Statement - Jul 2025</span>
+                                    <span class="deadline-sub">123 Construction Ltd.</span>
+                                </span>
+                                <span class="deadline-pill pill-violet">In 19 days</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="see-all-link"><i class="bi bi-plus"></i> View all scheduled reports</a>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- Bottom row: 3 cards -->
+            <section class="fr-bottom-row">
+                <article class="bk-summary-card">
+                    <div class="chart-card-head" style="margin-bottom:16px;">
+                        <h3 style="margin:0;">Profit &amp; Loss Trend</h3>
+                        <select class="year-select" aria-label="Profit and loss period">
+                            <option>This Year</option>
+                            <option>Last Year</option>
+                        </select>
+                    </div>
+                    <div class="revenue-canvas-wrap" style="height:210px;"><canvas id="plTrendChart"></canvas></div>
+                    <div class="chart-legend-row">
+                        <span><i class="legend-swatch" style="background:#2E5BFF;"></i> Revenue</span>
+                        <span><i class="legend-swatch" style="background:#16A34A;"></i> Net Profit</span>
+                    </div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Expense Breakdown <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Month)</span></h3>
+                    <div class="expense-body">
+                        <div class="expense-donut-wrap" style="width:130px;height:130px;"><canvas id="expenseBreakdownDonut"></canvas></div>
+                        <ul class="expense-legend">
+                            <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">Staff Costs</span><span class="leg-amount">£9,250</span><span class="leg-pct">41%</span></li>
+                            <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">Rent &amp; Rates</span><span class="leg-amount">£4,850</span><span class="leg-pct">22%</span></li>
+                            <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">Office Expenses</span><span class="leg-amount">£3,780</span><span class="leg-pct">17%</span></li>
+                            <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">Professional Fees</span><span class="leg-amount">£2,950</span><span class="leg-pct">13%</span></li>
+                            <li><span class="dot" style="background:#E2564F;"></span><span class="leg-label">Other Expenses</span><span class="leg-amount">£1,510</span><span class="leg-pct">7%</span></li>
+                        </ul>
+                    </div>
+                    <div class="expense-total">Total Expenses <b>£22,340</b></div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Key Ratios <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Month)</span></h3>
+                    <ul class="ratio-list">
+                        <li>
+                            <span class="ov-icon tint-green"><i class="bi bi-graph-up"></i></span>
+                            <span class="ov-label">Gross Profit Margin</span>
+                            <span class="ov-amount">40.2%</span>
+                            <span class="ov-delta">+4.1%</span>
+                        </li>
+                        <li>
+                            <span class="ov-icon tint-green"><i class="bi bi-percent"></i></span>
+                            <span class="ov-label">Net Profit Margin</span>
+                            <span class="ov-amount">17.0%</span>
+                            <span class="ov-delta">+3.2%</span>
+                        </li>
+                        <li>
+                            <span class="ov-icon tint-green"><i class="bi bi-bar-chart-line"></i></span>
+                            <span class="ov-label">Current Ratio</span>
+                            <span class="ov-amount">2.35:1</span>
+                            <span class="ov-delta">+0.18</span>
+                        </li>
+                        <li>
+                            <span class="ov-icon tint-green"><i class="bi bi-clock-history"></i></span>
+                            <span class="ov-label">Debtor Days</span>
+                            <span class="ov-amount">32 Days</span>
+                            <span class="ov-delta down">-3 Days</span>
+                        </li>
+                    </ul>
+                </article>
+            </section>
+
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/webjars/chart.js/4.4.4/dist/chart.umd.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/financial-reports.js}"></script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Budgeting &amp; Forecasting')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('budgeting')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Budgeting &amp; Forecasting')}"></header>
+
+        <main class="content">
+
+            <div class="auth-alert info" th:if="${successMessage}">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${successMessage}">Saved</span>
+            </div>
+
+            <!-- Page header card -->
+            <section class="page-header-card">
+                <div class="page-header-row">
+                    <div>
+                        <h1 class="page-title">Budgeting &amp; Forecasting</h1>
+                        <p class="page-sub">Plan today. Achieve tomorrow. Stay ahead with accurate budgets and smart forecasts.</p>
+                    </div>
+                    <a th:href="@{/budgeting/new}" class="btn-primary-navy">
+                        <i class="bi bi-plus-lg"></i> New Budget / Forecast
+                    </a>
+                </div>
+
+                <div class="mini-kpi-row">
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-bar-chart-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Active Budgets</p>
+                            <p class="mini-kpi-value">24</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+4 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-green"><i class="bi bi-calendar2-range-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Forecasts Generated</p>
+                            <p class="mini-kpi-value">18</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+3 this month</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-amber"><i class="bi bi-currency-pound"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Total Budgeted Amount</p>
+                            <p class="mini-kpi-value">£1,254,800</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+15.6% vs last year</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-violet"><i class="bi bi-graph-up-arrow"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Forecasted Revenue</p>
+                            <p class="mini-kpi-value">£1,487,600</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+18.2% vs last year</p>
+                        </div>
+                    </article>
+                    <article class="mini-kpi">
+                        <div class="mini-kpi-icon tint-blue"><i class="bi bi-pie-chart-fill"></i></div>
+                        <div>
+                            <p class="mini-kpi-label">Variance <span style="font-weight:400;color:#8494AC;">(This Month)</span></p>
+                            <p class="mini-kpi-value">£42,750</p>
+                            <p class="mini-kpi-foot" style="color:#16A34A;">+8.7% vs last month</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Main grid: filters / table / right rail -->
+            <section class="bk-grid">
+
+                <!-- Filters -->
+                <aside class="filters-card">
+                    <div class="filters-head"><i class="bi bi-funnel-fill"></i> Filters</div>
+
+                    <form id="filtersForm" method="get" th:action="@{/budgeting}">
+                        <div class="field-block">
+                            <label for="f-client">Client</label>
+                            <select id="f-client" name="client">
+                                <option value="">All Clients</option>
+                                <option th:each="c : ${clientNames}" th:value="${c}" th:text="${c}"
+                                        th:selected="${c == filter.client}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-type">Budget/Forecast Type</label>
+                            <select id="f-type" name="type">
+                                <option value="">All Types</option>
+                                <option th:each="t : ${types}" th:value="${t}" th:text="${t.label}"
+                                        th:selected="${t == filter.type}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-fy">Financial Year</label>
+                            <select id="f-fy" name="financialYear">
+                                <option value="">All Years</option>
+                                <option th:each="y : ${financialYears}" th:value="${y}"
+                                        th:text="|${y} - ${y + 1}|"
+                                        th:selected="${y == filter.financialYear}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-period">Period</label>
+                            <select id="f-period" name="period">
+                                <option value="">All Periods</option>
+                                <option th:each="p : ${periods}" th:value="${p}" th:text="${p.label}"
+                                        th:selected="${p == filter.period}"></option>
+                            </select>
+                        </div>
+                        <div class="field-block">
+                            <label for="f-status">Status</label>
+                            <select id="f-status" name="status">
+                                <option value="">All Status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"
+                                        th:selected="${s == filter.status}"></option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-apply">Apply Filters</button>
+                        <a th:href="@{/budgeting}" class="btn-reset">Reset</a>
+                    </form>
+                </aside>
+
+                <!-- Table -->
+                <div class="jobs-table-card">
+                    <div class="jobs-table-head">
+                        <h2>Budgets &amp; Forecasts</h2>
+                        <div class="search-box">
+                            <input type="search" name="q" form="filtersForm" placeholder="Search client or budget..." th:value="${filter.q}"/>
+                            <i class="bi bi-search"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table class="jobs-table">
+                            <thead>
+                                <tr>
+                                    <th>Client / Business</th>
+                                    <th>Type</th>
+                                    <th>Financial Year</th>
+                                    <th>Period</th>
+                                    <th class="num-col">Budgeted Amount</th>
+                                    <th>Status</th>
+                                    <th>Last Updated</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item, it : ${items}">
+                                    <td>
+                                        <div class="client-cell">
+                                            <span class="client-avatar" th:classappend="'avatar-tint-' + ${it.index % 5}"
+                                                  th:text="${item.initials}">ABC</span>
+                                            <span class="client-name" th:text="${item.clientName}">Client</span>
+                                        </div>
+                                    </td>
+                                    <td th:text="${item.type.label}">Annual Budget</td>
+                                    <td th:text="${item.financialYearLabel}">2024 - 2025</td>
+                                    <td th:text="${item.period.label}">Yearly</td>
+                                    <td class="num-col" th:text="${item.budgetedAmountLabel}">£245,000</td>
+                                    <td>
+                                        <span class="status-pill" th:classappend="'pill-' + ${item.status}" th:text="${item.status.label}">Status</span>
+                                    </td>
+                                    <td th:text="${item.lastUpdatedLabel}">08 Aug 2025</td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <a th:href="@{/budgeting/{id}(id=${item.id})}" class="row-action-btn" title="View"><i class="bi bi-eye"></i></a>
+                                            <a th:href="@{/budgeting/{id}/edit(id=${item.id})}" class="row-action-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                                            <button type="button" class="row-action-btn" title="More (coming soon)"><i class="bi bi-three-dots-vertical"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(items)}">
+                                    <td colspan="8" class="empty-row">No budgets or forecasts match these filters.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-footer">
+                        <span class="showing-text" th:if="${page.totalElements > 0}">
+                            Showing <span th:text="${page.number * page.size + 1}">1</span>
+                            to <span th:text="${page.number * page.size + items.size()}">6</span>
+                            of <span th:text="${page.totalElements}">24</span> entries
+                        </span>
+                        <span class="showing-text" th:unless="${page.totalElements > 0}">No entries</span>
+
+                        <nav class="pagination" th:if="${page.totalPages > 1}">
+                            <a th:href="@{/budgeting(client=${filter.client},type=${filter.type},financialYear=${filter.financialYear},period=${filter.period},status=${filter.status},q=${filter.q},page=0)}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&laquo;</a>
+                            <a th:href="@{/budgeting(client=${filter.client},type=${filter.type},financialYear=${filter.financialYear},period=${filter.period},status=${filter.status},q=${filter.q},page=${page.number - 1})}"
+                               class="page-btn" th:classappend="${page.first} ? ' disabled'">&lsaquo;</a>
+
+                            <a th:each="p : ${#numbers.sequence(0, page.totalPages - 1)}"
+                               th:href="@{/budgeting(client=${filter.client},type=${filter.type},financialYear=${filter.financialYear},period=${filter.period},status=${filter.status},q=${filter.q},page=${p})}"
+                               class="page-btn" th:classappend="${p == page.number} ? ' active'"
+                               th:text="${p + 1}">1</a>
+
+                            <a th:href="@{/budgeting(client=${filter.client},type=${filter.type},financialYear=${filter.financialYear},period=${filter.period},status=${filter.status},q=${filter.q},page=${page.number + 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&rsaquo;</a>
+                            <a th:href="@{/budgeting(client=${filter.client},type=${filter.type},financialYear=${filter.financialYear},period=${filter.period},status=${filter.status},q=${filter.q},page=${page.totalPages - 1})}"
+                               class="page-btn" th:classappend="${page.last} ? ' disabled'">&raquo;</a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Right rail -->
+                <aside class="right-rail">
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Budget vs Actual <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Month)</span></h3><a href="#" class="head-link">View All</a></div>
+                        <div class="overview-body">
+                            <div class="overview-pie-wrap" style="width:120px;height:120px;">
+                                <canvas id="budgetVsActualDonut"></canvas>
+                                <div class="donut-center">
+                                    <span class="donut-center-value" style="font-size:18px;">£42,750</span>
+                                    <span class="donut-center-label">Variance</span>
+                                </div>
+                            </div>
+                            <ul class="expense-legend">
+                                <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">Actual</span><span class="leg-amount">£96,250 (68%)</span></li>
+                                <li><span class="dot" style="background:#22C55E;"></span><span class="leg-label">Budgeted</span><span class="leg-amount">£53,500 (32%)</span></li>
+                            </ul>
+                        </div>
+                        <ul class="overview-list" style="margin-top:6px;">
+                            <li><span class="ov-label">Budgeted Amount</span><span class="ov-amount">£149,750</span></li>
+                            <li><span class="ov-label">Actual Amount</span><span class="ov-amount">£96,250</span></li>
+                            <li><span class="ov-label">Variance</span><span class="ov-amount">£42,750 <span style="color:#16A34A;">(+28.5%)</span></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Quick Actions</h3></div>
+                        <ul class="quick-actions">
+                            <li><a href="#"><i class="bi bi-plus-square-fill"></i> Create New Budget <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-graph-up-arrow"></i> Create Forecast <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-file-earmark-bar-graph-fill"></i> Budget vs Actual Report <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-file-earmark-text-fill"></i> Forecast vs Actual Report <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-download"></i> Download Budget Template <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                            <li><a href="#"><i class="bi bi-folder2-open"></i> View All Reports <i class="bi bi-chevron-right qa-chev"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="rail-card">
+                        <div class="rail-card-head"><h3>Upcoming Deadlines</h3><a href="#" class="head-link">View Calendar</a></div>
+                        <ul class="deadline-list">
+                            <li>
+                                <span class="date-chip chip-red" style="width:38px;height:38px;"><span class="chip-day" style="font-size:15px;">15</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Q2 Forecast Submission</span>
+                                    <span class="deadline-sub">ABC Solutions Ltd.</span>
+                                </span>
+                                <span class="deadline-pill pill-red">In 6 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-amber" style="width:38px;height:38px;"><span class="chip-day" style="font-size:15px;">20</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Budget Review Meeting</span>
+                                    <span class="deadline-sub">XYZ Retail Ltd.</span>
+                                </span>
+                                <span class="deadline-pill pill-amber">In 11 days</span>
+                            </li>
+                            <li>
+                                <span class="date-chip chip-violet" style="width:38px;height:38px;"><span class="chip-day" style="font-size:15px;">28</span><span class="chip-month">AUG</span></span>
+                                <span class="deadline-text">
+                                    <span class="deadline-title">Annual Budget Finalization</span>
+                                    <span class="deadline-sub">123 Construction Ltd.</span>
+                                </span>
+                                <span class="deadline-pill pill-violet">In 19 days</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="see-all-link"><i class="bi bi-plus"></i> View all deadlines</a>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- Bottom row: 3 cards -->
+            <section class="fr-bottom-row">
+                <article class="bk-summary-card">
+                    <div class="chart-card-head" style="margin-bottom:16px;">
+                        <h3 style="margin:0;">Budget vs Actual Trend</h3>
+                        <select class="year-select" aria-label="Trend period">
+                            <option>This Year</option>
+                            <option>Last Year</option>
+                        </select>
+                    </div>
+                    <div class="revenue-canvas-wrap" style="height:210px;"><canvas id="budgetTrendChart"></canvas></div>
+                    <div class="chart-legend-row">
+                        <span><i class="legend-swatch" style="background:#2E5BFF;"></i> Budgeted</span>
+                        <span><i class="legend-swatch" style="background:#16A34A;"></i> Actual</span>
+                    </div>
+                </article>
+
+                <article class="bk-expense-card">
+                    <h3>Budget by Category <span style="font-weight:400;font-size:13px;color:#6B7A94;">(This Year)</span></h3>
+                    <div class="expense-body">
+                        <div class="expense-donut-wrap" style="width:130px;height:130px;"><canvas id="categoryDonut"></canvas></div>
+                        <ul class="expense-legend">
+                            <li><span class="dot" style="background:#2E5BFF;"></span><span class="leg-label">Staff Costs</span><span class="leg-amount">£420,000</span><span class="leg-pct">33%</span></li>
+                            <li><span class="dot" style="background:#14B8A6;"></span><span class="leg-label">Operations</span><span class="leg-amount">£310,000</span><span class="leg-pct">25%</span></li>
+                            <li><span class="dot" style="background:#F97316;"></span><span class="leg-label">Marketing</span><span class="leg-amount">£160,000</span><span class="leg-pct">13%</span></li>
+                            <li><span class="dot" style="background:#8B5CF6;"></span><span class="leg-label">Professional Fees</span><span class="leg-amount">£140,000</span><span class="leg-pct">11%</span></li>
+                            <li><span class="dot" style="background:#F59E0B;"></span><span class="leg-label">Other Expenses</span><span class="leg-amount">£224,800</span><span class="leg-pct">18%</span></li>
+                        </ul>
+                    </div>
+                    <div class="expense-total">Total Budgeted <b>£1,254,800</b></div>
+                </article>
+
+                <article class="bk-expense-card gauge-card">
+                    <h3>Forecast Accuracy</h3>
+                    <div class="gauge-wrap"><canvas id="accuracyGauge"></canvas></div>
+                    <p class="gauge-caption" style="color:#16A34A;">Good Accuracy</p>
+                    <p class="gauge-helper">Your forecasts are performing well within acceptable range.</p>
+                </article>
+            </section>
+
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/webjars/chart.js/4.4.4/dist/chart.umd.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/budgeting.js}"></script>
+</body>
+</html>

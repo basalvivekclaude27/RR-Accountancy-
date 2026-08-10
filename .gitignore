@@ -1,0 +1,20 @@
+target/
+*.class
+
+# Claude Code session-local state
+.claude/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Env (local secrets/overrides — see .env.example)
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Dashboard')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></aside>
+
+    <div class="app-main">
+        <header class="topbar">
+            <div class="topbar-left">
+                <p class="greeting">Welcome back,</p>
+                <h1 class="brand-line">R &amp; R Accountancy Services</h1>
+                <p class="sub">Here's your business overview for today.</p>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-right-row">
+                    <button type="button" class="icon-btn bell-btn" aria-label="Notifications">
+                        <i class="bi bi-bell-fill"></i>
+                        <span class="badge-dot">3</span>
+                    </button>
+                    <span class="v-divider"></span>
+                    <div class="user-menu">
+                        <button type="button" class="user-menu-toggle" id="userMenuToggle" aria-haspopup="true" aria-expanded="false">
+                            <span class="avatar"><i class="bi bi-person-fill"></i></span>
+                            <span class="user-meta">
+                                <span class="user-name" th:text="${fullName}">Administrator</span>
+                                <span class="user-role" th:text="${roleLabel}">Administrator</span>
+                            </span>
+                            <i class="bi bi-chevron-down chevron"></i>
+                        </button>
+                        <div class="user-menu-dropdown" id="userMenuDropdown">
+                            <form th:action="@{/logout}" method="post">
+                                <button type="submit" class="dropdown-logout">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="date-pill">
+                    <i class="bi bi-calendar3"></i>
+                    <span th:text="${todayLabel}">09 August 2025</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+
+            <!-- KPI row -->
+            <section class="kpi-row">
+                <article class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-icon tint-blue"><i class="bi bi-people-fill"></i></div>
+                        <div class="kpi-text">
+                            <p class="kpi-label">Total Clients</p>
+                            <p class="kpi-value">128</p>
+                            <p class="kpi-delta up">+12 this month</p>
+                        </div>
+                    </div>
+                    <div class="sparkline-wrap"><canvas class="sparkline" data-spark="clients"></canvas></div>
+                </article>
+                <article class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-icon tint-green"><i class="bi bi-currency-pound"></i></div>
+                        <div class="kpi-text">
+                            <p class="kpi-label">Total Revenue</p>
+                            <p class="kpi-value">£45,870</p>
+                            <p class="kpi-delta up">+18.7% vs last month</p>
+                        </div>
+                    </div>
+                    <div class="sparkline-wrap"><canvas class="sparkline" data-spark="revenue"></canvas></div>
+                </article>
+                <article class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-icon tint-amber"><i class="bi bi-file-earmark-text-fill"></i></div>
+                        <div class="kpi-text">
+                            <p class="kpi-label">Outstanding Receivables</p>
+                            <p class="kpi-value">£12,430</p>
+                            <p class="kpi-delta neutral-amber">5 Invoices</p>
+                        </div>
+                    </div>
+                    <div class="sparkline-wrap"><canvas class="sparkline" data-spark="receivables"></canvas></div>
+                </article>
+                <article class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-icon tint-violet"><i class="bi bi-bank2"></i></div>
+                        <div class="kpi-text">
+                            <p class="kpi-label">Tax Liabilities</p>
+                            <p class="kpi-value">£8,920</p>
+                            <p class="kpi-delta neutral-violet">2 Upcoming</p>
+                        </div>
+                    </div>
+                    <div class="sparkline-wrap"><canvas class="sparkline" data-spark="tax"></canvas></div>
+                </article>
+            </section>
+
+            <!-- Charts row -->
+            <section class="charts-row">
+                <article class="chart-card revenue-card">
+                    <div class="chart-card-head">
+                        <h2>Revenue Overview</h2>
+                        <select class="year-select" aria-label="Revenue period">
+                            <option>This Year</option>
+                            <option>Last Year</option>
+                        </select>
+                    </div>
+                    <div class="revenue-canvas-wrap"><canvas id="revenueChart"></canvas></div>
+                </article>
+                <article class="chart-card donut-card">
+                    <div class="chart-card-head">
+                        <h2>Income vs Expenses</h2>
+                    </div>
+                    <div class="donut-wrap">
+                        <div class="donut-canvas-wrap">
+                            <canvas id="incomeExpenseChart" height="180" width="180"></canvas>
+                            <div class="donut-center">
+                                <span class="donut-center-label">Net Profit</span>
+                                <span class="donut-center-value">£18,750</span>
+                            </div>
+                        </div>
+                        <ul class="donut-legend">
+                            <li>
+                                <span class="dot" style="background:#4CAF7D;"></span>
+                                <span class="leg-label">Income</span>
+                                <span class="leg-amount">£45,870</span>
+                                <span class="leg-pct">68%</span>
+                            </li>
+                            <li>
+                                <span class="dot" style="background:#E2564F;"></span>
+                                <span class="leg-label">Expenses</span>
+                                <span class="leg-amount">£27,120</span>
+                                <span class="leg-pct">32%</span>
+                            </li>
+                        </ul>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Mid row -->
+            <section class="mid-row">
+                <article class="mid-card">
+                    <div class="mid-card-head"><h2>Recent Activities</h2></div>
+                    <ul class="activity-list">
+                        <li>
+                            <span class="status-icon status-green"><i class="bi bi-check-lg"></i></span>
+                            <span class="activity-text">
+                                <span class="activity-title">Invoice INV-1005 Paid</span>
+                                <span class="activity-meta">Client: ABC Solutions Ltd.</span>
+                            </span>
+                            <span class="activity-time" style="color:#16A34A;">2h ago</span>
+                        </li>
+                        <li>
+                            <span class="status-icon status-amber"><i class="bi bi-clock-fill"></i></span>
+                            <span class="activity-text">
+                                <span class="activity-title">VAT Return Due</span>
+                                <span class="activity-meta">Period: Jul - Sep 2025</span>
+                            </span>
+                            <span class="activity-time" style="color:#D98324;">1d ago</span>
+                        </li>
+                        <li>
+                            <span class="status-icon status-violet"><i class="bi bi-person-plus-fill"></i></span>
+                            <span class="activity-text">
+                                <span class="activity-title">New Client Added</span>
+                                <span class="activity-meta">Client: Bright Future Ltd.</span>
+                            </span>
+                            <span class="activity-time" style="color:#8B5CF6;">2d ago</span>
+                        </li>
+                        <li>
+                            <span class="status-icon status-blue"><i class="bi bi-file-earmark-check-fill"></i></span>
+                            <span class="activity-text">
+                                <span class="activity-title">PAYE Submission Completed</span>
+                                <span class="activity-meta">Month: July 2025</span>
+                            </span>
+                            <span class="activity-time" style="color:#2E5BFF;">2d ago</span>
+                        </li>
+                    </ul>
+                </article>
+
+                <article class="mid-card">
+                    <div class="mid-card-head">
+                        <h2>Top Services by Usage</h2>
+                        <a href="#" class="head-link">View All</a>
+                    </div>
+                    <ul class="service-list">
+                        <li>
+                            <span class="service-label">Accounts Preparation</span>
+                            <span class="service-track"><span class="service-fill" style="width:28%;"></span></span>
+                            <span class="service-pct">28%</span>
+                        </li>
+                        <li>
+                            <span class="service-label">Bookkeeping</span>
+                            <span class="service-track"><span class="service-fill" style="width:22%;"></span></span>
+                            <span class="service-pct">22%</span>
+                        </li>
+                        <li>
+                            <span class="service-label">Payroll Advice &amp; Service</span>
+                            <span class="service-track"><span class="service-fill" style="width:16%;"></span></span>
+                            <span class="service-pct">16%</span>
+                        </li>
+                        <li>
+                            <span class="service-label">Tax Services</span>
+                            <span class="service-track"><span class="service-fill" style="width:20%;"></span></span>
+                            <span class="service-pct">20%</span>
+                        </li>
+                        <li>
+                            <span class="service-label">Business Startup</span>
+                            <span class="service-track"><span class="service-fill" style="width:14%;"></span></span>
+                            <span class="service-pct">14%</span>
+                        </li>
+                    </ul>
+                </article>
+
+                <article class="mid-card">
+                    <div class="mid-card-head">
+                        <h2>Upcoming Deadlines</h2>
+                        <a href="#" class="head-link">View Calendar</a>
+                    </div>
+                    <ul class="deadline-list">
+                        <li>
+                            <span class="date-chip chip-red"><span class="chip-day">19</span><span class="chip-month">AUG</span></span>
+                            <span class="deadline-text">
+                                <span class="deadline-title">VAT Return Due</span>
+                                <span class="deadline-sub">Period: Jul - Sep 2025</span>
+                            </span>
+                            <span class="deadline-pill pill-red">10 days left</span>
+                        </li>
+                        <li>
+                            <span class="date-chip chip-amber"><span class="chip-day">31</span><span class="chip-month">AUG</span></span>
+                            <span class="deadline-text">
+                                <span class="deadline-title">PAYE Submission</span>
+                                <span class="deadline-sub">Month: August 2025</span>
+                            </span>
+                            <span class="deadline-pill pill-amber">22 days left</span>
+                        </li>
+                        <li>
+                            <span class="date-chip chip-violet"><span class="chip-day">30</span><span class="chip-month">SEP</span></span>
+                            <span class="deadline-text">
+                                <span class="deadline-title">Corporation Tax Payment</span>
+                                <span class="deadline-sub">Year End: 31 Mar 2025</span>
+                            </span>
+                            <span class="deadline-pill pill-violet">52 days left</span>
+                        </li>
+                    </ul>
+                </article>
+            </section>
+
+            <!-- Bottom stats strip -->
+            <section class="stats-strip">
+                <div class="stats-seg">
+                    <i class="bi bi-people stats-icon"></i>
+                    <div>
+                        <p class="stats-label">Active Engagements</p>
+                        <p class="stats-value">36</p>
+                        <p class="stats-foot" style="color:#16A34A;">+4 this month</p>
+                    </div>
+                </div>
+                <div class="stats-seg">
+                    <i class="bi bi-clipboard2-check stats-icon"></i>
+                    <div>
+                        <p class="stats-label">Completed Jobs</p>
+                        <p class="stats-value">142</p>
+                        <p class="stats-foot" style="color:#16A34A;">+15 this month</p>
+                    </div>
+                </div>
+                <div class="stats-seg">
+                    <i class="bi bi-calendar-event stats-icon"></i>
+                    <div>
+                        <p class="stats-label">Upcoming Appointments</p>
+                        <p class="stats-value">7</p>
+                        <p class="stats-foot" style="color:#2E5BFF;">Next: 12 Aug 2025</p>
+                    </div>
+                </div>
+                <div class="stats-seg">
+                    <i class="bi bi-emoji-smile stats-icon"></i>
+                    <div>
+                        <p class="stats-label">Client Satisfaction</p>
+                        <p class="stats-value">98%</p>
+                        <p class="stats-foot" style="color:#16A34A;">Excellent</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/webjars/chart.js/4.4.4/dist/chart.umd.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

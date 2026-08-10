@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Report Detail')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('financial-reports')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Financial &amp; Management Accounts')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${report.clientName}">Client Name</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/financial-reports}"><i class="bi bi-arrow-left"></i> Back to Financial &amp; Management Reports</a>
+                        </p>
+                    </div>
+                    <div style="display:flex;gap:10px;">
+                        <a th:href="@{/financial-reports/{id}/download(id=${report.id})}" class="btn-reset" style="width:auto;padding:0 20px;">
+                            <i class="bi bi-download"></i> Download
+                        </a>
+                        <a th:href="@{/financial-reports/{id}/edit(id=${report.id})}" class="btn-primary-navy">
+                            <i class="bi bi-pencil"></i> Edit Report
+                        </a>
+                    </div>
+                </div>
+
+                <dl class="detail-grid">
+                    <div class="detail-item">
+                        <dt>Report Type</dt>
+                        <dd th:text="${report.reportType.label}">Management Accounts</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Period</dt>
+                        <dd th:text="${report.periodLabel}">Jul 2025</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Financial Year</dt>
+                        <dd th:text="${report.financialYearLabel}">2024 - 2025</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Status</dt>
+                        <dd><span class="status-pill" th:classappend="'pill-' + ${report.status}" th:text="${report.status.label}">Status</span></dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Generated On</dt>
+                        <dd th:text="${report.generatedOnLabel}">08 Aug 2025</dd>
+                    </div>
+                </dl>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Client Registration')}"></head>
+<body>
+<div class="auth-shell">
+
+    <div class="auth-header">
+        <h1>Create Your Client Account</h1>
+        <p>Register to access R &amp; R Accountancy Services</p>
+    </div>
+
+    <div class="register-wrap">
+        <section class="auth-card client" style="min-height:auto;">
+            <div class="form-panel" style="flex:1 1 100%; margin:16px;">
+                <h2>Client Registration</h2>
+                <p class="form-sub">Takes less than a minute</p>
+
+                <form th:action="@{/register}" th:object="${registrationForm}" method="post" novalidate>
+
+                    <div class="field-group">
+                        <label for="fullName">Full Name</label>
+                        <div class="field-wrap">
+                            <i class="bi bi-person-fill field-icon"></i>
+                            <input type="text" id="fullName" th:field="*{fullName}"
+                                   placeholder="Enter your full name" autocomplete="name"/>
+                        </div>
+                        <div class="field-error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="email">Email Address</label>
+                        <div class="field-wrap">
+                            <i class="bi bi-envelope-fill field-icon"></i>
+                            <input type="text" id="email" th:field="*{email}"
+                                   placeholder="Enter email address" autocomplete="email"/>
+                        </div>
+                        <div class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="password">Password</label>
+                        <div class="field-wrap">
+                            <i class="bi bi-lock-fill field-icon"></i>
+                            <input type="password" id="password" th:field="*{password}"
+                                   placeholder="Create a password" autocomplete="new-password"/>
+                            <button type="button" class="toggle-eye bi bi-eye" data-target="password" aria-label="Show password"></button>
+                        </div>
+                        <div class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="field-wrap">
+                            <i class="bi bi-lock-fill field-icon"></i>
+                            <input type="password" id="confirmPassword" th:field="*{confirmPassword}"
+                                   placeholder="Re-enter password" autocomplete="new-password"/>
+                            <button type="button" class="toggle-eye bi bi-eye" data-target="confirmPassword" aria-label="Show password"></button>
+                        </div>
+                        <div class="field-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        Create Account <i class="bi bi-arrow-right"></i>
+                    </button>
+                </form>
+
+                <p class="form-footer">Already have an account? <a th:href="@{/login(tab='client')}">Sign In</a></p>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script th:src="@{/js/auth.js}"></script>
+</body>
+</html>

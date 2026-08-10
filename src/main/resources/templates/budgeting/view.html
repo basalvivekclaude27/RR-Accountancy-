@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Budget / Forecast Detail')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('budgeting')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Budgeting &amp; Forecasting')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${item.clientName}">Client Name</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/budgeting}"><i class="bi bi-arrow-left"></i> Back to Budgets &amp; Forecasts</a>
+                        </p>
+                    </div>
+                    <a th:href="@{/budgeting/{id}/edit(id=${item.id})}" class="btn-primary-navy">
+                        <i class="bi bi-pencil"></i> Edit
+                    </a>
+                </div>
+
+                <dl class="detail-grid">
+                    <div class="detail-item">
+                        <dt>Type</dt>
+                        <dd th:text="${item.type.label}">Annual Budget</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Financial Year</dt>
+                        <dd th:text="${item.financialYearLabel}">2024 - 2025</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Period</dt>
+                        <dd th:text="${item.period.label}">Yearly</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Budgeted Amount</dt>
+                        <dd th:text="${item.budgetedAmountLabel}">£245,000</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Status</dt>
+                        <dd><span class="status-pill" th:classappend="'pill-' + ${item.status}" th:text="${item.status.label}">Status</span></dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Last Updated</dt>
+                        <dd th:text="${item.lastUpdatedLabel}">08 Aug 2025</dd>
+                    </div>
+                </dl>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

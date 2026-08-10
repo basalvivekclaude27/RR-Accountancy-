@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${formTitle})}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('budgeting')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Budgeting &amp; Forecasting')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${formTitle}">New Budget / Forecast</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/budgeting}"><i class="bi bi-arrow-left"></i> Back to Budgets &amp; Forecasts</a>
+                        </p>
+                    </div>
+                </div>
+
+                <form th:action="@{${formAction}}" th:object="${itemForm}" method="post" class="job-form" novalidate>
+
+                    <div class="job-form-grid">
+                        <div class="field-block">
+                            <label for="clientName">Client / Business Name</label>
+                            <input type="text" id="clientName" th:field="*{clientName}" placeholder="e.g. ABC Solutions Ltd."/>
+                            <div class="field-error" th:if="${#fields.hasErrors('clientName')}" th:errors="*{clientName}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="type">Type</label>
+                            <select id="type" th:field="*{type}">
+                                <option value="">Select type</option>
+                                <option th:each="t : ${types}" th:value="${t}" th:text="${t.label}"></option>
+                            </select>
+                            <div class="field-error" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="financialYearStart">Financial Year (start)</label>
+                            <input type="number" id="financialYearStart" th:field="*{financialYearStart}" placeholder="e.g. 2024" min="2000" max="2100"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('financialYearStart')}" th:errors="*{financialYearStart}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="period">Period</label>
+                            <select id="period" th:field="*{period}">
+                                <option value="">Select period</option>
+                                <option th:each="p : ${periods}" th:value="${p}" th:text="${p.label}"></option>
+                            </select>
+                            <div class="field-error" th:if="${#fields.hasErrors('period')}" th:errors="*{period}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="budgetedAmount">Budgeted Amount (£)</label>
+                            <input type="number" id="budgetedAmount" th:field="*{budgetedAmount}" step="0.01" min="0" placeholder="e.g. 245000"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('budgetedAmount')}" th:errors="*{budgetedAmount}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="status">Status</label>
+                            <select id="status" th:field="*{status}">
+                                <option value="">Select status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"></option>
+                            </select>
+                            <div class="field-error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                        </div>
+                    </div>
+
+                    <div class="job-form-actions">
+                        <a th:href="@{/budgeting}" class="btn-reset">Cancel</a>
+                        <button type="submit" class="btn-apply"><i class="bi bi-check-lg"></i> Save</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

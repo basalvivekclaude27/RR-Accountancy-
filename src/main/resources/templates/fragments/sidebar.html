@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside class="sidebar" th:fragment="sidebar(active)">
+    <div class="sidebar-logo">
+        <div class="logo-word">R &amp; R<i class="bi bi-graph-up-arrow logo-mark"></i></div>
+        <div class="logo-sub">Accountancy Services</div>
+        <div class="logo-tagline"><span>&#10230;</span> Your Success is Our Business <span>&#10230;</span></div>
+    </div>
+
+    <ul class="sidebar-nav">
+        <li>
+            <a th:href="@{/dashboard/admin}" class="nav-item" th:classappend="${active == 'dashboard'} ? ' active' : ''">
+                <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/bookkeeping}" class="nav-item" th:classappend="${active == 'bookkeeping'} ? ' active' : ''">
+                <i class="bi bi-journal-bookmark-fill"></i><span>Bookkeeping</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/accounts-preparation}" class="nav-item" th:classappend="${active == 'accounts-preparation'} ? ' active' : ''">
+                <i class="bi bi-file-earmark-spreadsheet-fill"></i><span>Accounts Preparation</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/payroll}" class="nav-item" th:classappend="${active == 'payroll'} ? ' active' : ''">
+                <i class="bi bi-people-fill"></i><span>Payroll Advice &amp; Service</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/financial-reports}" class="nav-item" th:classappend="${active == 'financial-reports'} ? ' active' : ''">
+                <i class="bi bi-graph-up"></i><span>Financial &amp; Management Accounts</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/budgeting}" class="nav-item" th:classappend="${active == 'budgeting'} ? ' active' : ''">
+                <i class="bi bi-pie-chart-fill"></i><span>Budgeting &amp; Forecasting</span>
+            </a>
+        </li>
+        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-building"></i><span>Service Charge Accounts</span></a></li>
+        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-rocket-takeoff-fill"></i><span>Business Startup</span></a></li>
+        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-file-earmark-text-fill"></i><span>Company Formation</span></a></li>
+        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-clipboard-data-fill"></i><span>Business Plans</span></a></li>
+        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-person-vcard-fill"></i><span>Personal Income Tax</span></a></li>
+        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-briefcase-fill"></i><span>Business Income Tax</span></a></li>
+        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-bank"></i><span>Corporation Tax</span></a></li>
+        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-receipt-cutoff"></i><span>Value Added Tax (VAT)</span></a></li>
+        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-graph-up-arrow"></i><span>Capital Gain Tax</span></a></li>
+        <li><a href="#" class="nav-item" title="Coming soon"><i class="bi bi-shield-fill-check"></i><span>Inheritance Tax</span></a></li>
+    </ul>
+
+    <div class="sidebar-trust">
+        <i class="bi bi-shield-fill-check"></i>
+        <div>Trusted <b>Advice.</b><br/>Expert <b>Support.</b><br/>Every Step of the <b>Way.</b></div>
+    </div>
+</aside>
+</body>
+</html>

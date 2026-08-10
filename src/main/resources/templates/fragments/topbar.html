@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="module-topbar" th:fragment="topbar(pageTitle)">
+    <div class="module-topbar-left">
+        <button type="button" class="hamburger-btn" id="sidebarToggle" aria-label="Toggle sidebar">
+            <i class="bi bi-list"></i>
+        </button>
+        <div>
+            <h1 class="module-title" th:text="${pageTitle}">Page</h1>
+            <p class="module-breadcrumb">
+                <a th:href="@{/dashboard/admin}">Dashboard</a>
+                <i class="bi bi-chevron-right"></i>
+                <span th:text="${pageTitle}">Page</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="module-topbar-right">
+        <button type="button" class="icon-btn bell-btn" aria-label="Notifications">
+            <i class="bi bi-bell-fill"></i>
+            <span class="badge-dot">3</span>
+        </button>
+        <span class="v-divider"></span>
+        <div class="user-menu">
+            <button type="button" class="user-menu-toggle" id="userMenuToggle" aria-haspopup="true" aria-expanded="false">
+                <span class="avatar"><i class="bi bi-person-fill"></i></span>
+                <span class="user-meta">
+                    <span class="user-name" th:text="${fullName}">User</span>
+                    <span class="user-role" th:text="${roleLabel}">Role</span>
+                </span>
+                <i class="bi bi-chevron-down chevron"></i>
+            </button>
+            <div class="user-menu-dropdown" id="userMenuDropdown">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="dropdown-logout">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>

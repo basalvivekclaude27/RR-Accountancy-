@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${formTitle})}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('financial-reports')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Financial &amp; Management Accounts')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${formTitle}">New Report / Account</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/financial-reports}"><i class="bi bi-arrow-left"></i> Back to Financial &amp; Management Reports</a>
+                        </p>
+                    </div>
+                </div>
+
+                <form th:action="@{${formAction}}" th:object="${reportForm}" method="post" class="job-form" novalidate>
+
+                    <div class="job-form-grid">
+                        <div class="field-block">
+                            <label for="clientName">Client / Business Name</label>
+                            <input type="text" id="clientName" th:field="*{clientName}" placeholder="e.g. ABC Solutions Ltd."/>
+                            <div class="field-error" th:if="${#fields.hasErrors('clientName')}" th:errors="*{clientName}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="reportType">Report Type</label>
+                            <select id="reportType" th:field="*{reportType}">
+                                <option value="">Select report type</option>
+                                <option th:each="t : ${reportTypes}" th:value="${t}" th:text="${t.label}"></option>
+                            </select>
+                            <div class="field-error" th:if="${#fields.hasErrors('reportType')}" th:errors="*{reportType}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="period">Period</label>
+                            <input type="month" id="period" th:field="*{period}"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('period')}" th:errors="*{period}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="financialYearStart">Financial Year (start)</label>
+                            <input type="number" id="financialYearStart" th:field="*{financialYearStart}" placeholder="e.g. 2024" min="2000" max="2100"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('financialYearStart')}" th:errors="*{financialYearStart}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="status">Status</label>
+                            <select id="status" th:field="*{status}">
+                                <option value="">Select status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"></option>
+                            </select>
+                            <div class="field-error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                        </div>
+                    </div>
+
+                    <div class="job-form-actions">
+                        <a th:href="@{/financial-reports}" class="btn-reset">Cancel</a>
+                        <button type="submit" class="btn-apply"><i class="bi bi-check-lg"></i> Save Report</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

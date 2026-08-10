@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Something Went Wrong')}"></head>
+<body>
+<div class="auth-shell">
+    <div class="auth-header">
+        <h1><i class="bi bi-exclamation-triangle" style="color:#B42318;"></i> Something Went Wrong</h1>
+        <p>An unexpected error occurred. Please try again, or contact support if this continues.</p>
+    </div>
+    <div class="register-wrap">
+        <a th:href="@{/login}" class="btn-submit text-decoration-none" style="background:var(--navy);">
+            <i class="bi bi-arrow-left"></i> Back to Sign In
+        </a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Payroll Run Detail')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('payroll')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Payroll Advice & Service')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${run.clientName}">Client Name</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/payroll}"><i class="bi bi-arrow-left"></i> Back to Payroll Runs</a>
+                        </p>
+                    </div>
+                    <a th:href="@{/payroll/{id}/edit(id=${run.id})}" class="btn-primary-navy">
+                        <i class="bi bi-pencil"></i> Edit Run
+                    </a>
+                </div>
+
+                <dl class="detail-grid">
+                    <div class="detail-item">
+                        <dt>Payroll Month</dt>
+                        <dd th:text="${run.payrollMonthLabel}">Jul 2025</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Frequency</dt>
+                        <dd th:text="${run.frequency.label}">Monthly</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Employees</dt>
+                        <dd th:text="${run.employees}">18</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Net Pay</dt>
+                        <dd th:text="${run.netPayLabel}">£8,450</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Status</dt>
+                        <dd><span class="status-pill" th:classappend="'pill-' + ${run.status}" th:text="${run.status.label}">Status</span></dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Assigned To</dt>
+                        <dd th:text="${run.assignedTo}">Staff</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Last Updated</dt>
+                        <dd th:text="${run.lastUpdatedLabel}">08 Aug 2025</dd>
+                    </div>
+                </dl>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

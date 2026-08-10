@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Job Detail')}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('bookkeeping')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Bookkeeping')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${job.clientName}">Client Name</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/bookkeeping}"><i class="bi bi-arrow-left"></i> Back to Bookkeeping Jobs</a>
+                        </p>
+                    </div>
+                    <a th:href="@{/bookkeeping/{id}/edit(id=${job.id})}" class="btn-primary-navy">
+                        <i class="bi bi-pencil"></i> Edit Job
+                    </a>
+                </div>
+
+                <dl class="detail-grid">
+                    <div class="detail-item">
+                        <dt>Invoice Reference</dt>
+                        <dd th:text="${job.invoiceRef}">INV-0000</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Period</dt>
+                        <dd th:text="${job.periodLabel}">Jul 2025</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Category</dt>
+                        <dd th:text="${job.category.label}">Bookkeeping</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Status</dt>
+                        <dd><span class="status-pill" th:classappend="'pill-' + ${job.status}" th:text="${job.status.label}">Status</span></dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Assigned To</dt>
+                        <dd th:text="${job.assignedTo}">Staff</dd>
+                    </div>
+                    <div class="detail-item">
+                        <dt>Last Updated</dt>
+                        <dd th:text="${job.lastUpdatedLabel}">08 Aug 2025</dd>
+                    </div>
+                </dl>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${formTitle})}"></head>
+<body class="dashboard-body">
+
+<div class="app-shell">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar('payroll')}"></aside>
+
+    <div class="app-main">
+        <header th:replace="~{fragments/topbar :: topbar('Payroll Advice & Service')}"></header>
+
+        <main class="content">
+            <section class="form-card">
+                <div class="form-card-head">
+                    <div>
+                        <h1 class="page-title" th:text="${formTitle}">New Payroll Run</h1>
+                        <p class="page-sub">
+                            <a th:href="@{/payroll}"><i class="bi bi-arrow-left"></i> Back to Payroll Runs</a>
+                        </p>
+                    </div>
+                </div>
+
+                <form th:action="@{${formAction}}" th:object="${runForm}" method="post" class="job-form" novalidate>
+
+                    <div class="job-form-grid">
+                        <div class="field-block">
+                            <label for="clientName">Client / Business Name</label>
+                            <input type="text" id="clientName" th:field="*{clientName}" placeholder="e.g. ABC Solutions Ltd."/>
+                            <div class="field-error" th:if="${#fields.hasErrors('clientName')}" th:errors="*{clientName}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="payrollMonth">Payroll Month</label>
+                            <input type="month" id="payrollMonth" th:field="*{payrollMonth}"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('payrollMonth')}" th:errors="*{payrollMonth}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="frequency">Frequency</label>
+                            <select id="frequency" th:field="*{frequency}">
+                                <option value="">Select frequency</option>
+                                <option th:each="f : ${frequencies}" th:value="${f}" th:text="${f.label}"></option>
+                            </select>
+                            <div class="field-error" th:if="${#fields.hasErrors('frequency')}" th:errors="*{frequency}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="employees">Employees</label>
+                            <input type="number" id="employees" th:field="*{employees}" min="1" placeholder="e.g. 18"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('employees')}" th:errors="*{employees}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="netPay">Net Pay (£)</label>
+                            <input type="number" id="netPay" th:field="*{netPay}" step="0.01" min="0" placeholder="e.g. 8450.00"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('netPay')}" th:errors="*{netPay}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="status">Status</label>
+                            <select id="status" th:field="*{status}">
+                                <option value="">Select status</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"></option>
+                            </select>
+                            <div class="field-error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                        </div>
+
+                        <div class="field-block">
+                            <label for="assignedTo">Assigned To</label>
+                            <input type="text" id="assignedTo" th:field="*{assignedTo}" placeholder="Staff member name"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('assignedTo')}" th:errors="*{assignedTo}"></div>
+                        </div>
+                    </div>
+
+                    <div class="job-form-actions">
+                        <a th:href="@{/payroll}" class="btn-reset">Cancel</a>
+                        <button type="submit" class="btn-apply"><i class="bi bi-check-lg"></i> Save Payroll Run</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <span class="footer-diamond">&#10022;</span>
+            <span class="footer-text">Reliable. Professional. Personal. Your Financial Success is Our Priority.</span>
+            <span class="footer-diamond">&#10022;</span>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
