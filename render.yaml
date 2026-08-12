@@ -30,5 +30,5 @@ services:
 databases:
   - name: rr-accountancy-db
     plan: free
-    databaseName: rr_accountancy
-    user: rr_admin
+    databaseName: rr_accountancy_db
+    user: admin
