@@ -40,6 +40,123 @@ body {
     align-items: center;
 }
 
+/* Login page split-screen shell (scoped, does not affect .auth-shell users:
+   register/forgot-password/error/403) */
+.login-shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+}
+
+.form-side {
+    flex: 1 1 42%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    padding: 40px 24px;
+}
+.form-side-inner { width: 100%; max-width: 400px; }
+.form-side .auth-header { text-align: left; margin-bottom: 24px; }
+.form-side .auth-header h1 { font-size: 22px; }
+.form-side .auth-header p { font-size: 13px; }
+.form-side .auth-alert,
+.form-side .role-toggle { max-width: none; }
+
+/* Compact card override — scoped to .compact so register/forgot-password's
+   .auth-card usage (which lacks this class) is unaffected. */
+.auth-card.compact { min-height: auto; }
+.auth-card.compact .form-panel { padding: 28px 30px; }
+.auth-card.compact .form-panel h2 { font-size: 22px; }
+.auth-card.compact .field-wrap input { height: 44px; }
+.auth-card.compact .btn-submit { height: 46px; }
+
+/* Theme panel (left side) — role-reactive brand/illustration panel */
+.theme-panel {
+    flex: 0 0 58%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    overflow: hidden;
+    color: #fff;
+    transition: background .25s ease;
+}
+.theme-panel[data-role="admin"] {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--admin-accent-2) 100%);
+}
+.theme-panel[data-role="client"] {
+    background: linear-gradient(135deg, var(--client-accent) 0%, var(--client-accent-2) 100%);
+}
+
+.theme-content {
+    display: none;
+    max-width: 420px;
+    opacity: 0;
+    transition: opacity .2s ease;
+}
+.theme-panel[data-role="admin"] .theme-admin,
+.theme-panel[data-role="client"] .theme-client {
+    display: block;
+    opacity: 1;
+}
+
+.theme-icon-cluster {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin-bottom: 32px;
+}
+.theme-icon-cluster .tic-orb {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+}
+.theme-icon-cluster .tic-orb.orb1 { width: 120px; height: 120px; top: -10px; left: 0; }
+.theme-icon-cluster .tic-orb.orb2 { width: 64px; height: 64px; bottom: 0; right: 10px; background: rgba(255,255,255,.2); }
+.theme-icon-cluster .tic-badge {
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+.theme-icon-cluster .tic-badge.b1 { top: 4px; right: 6px; }
+.theme-icon-cluster .tic-badge.b2 { bottom: 22px; left: 0; }
+.theme-icon-cluster .tic-main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
+}
+
+.theme-headline { font-size: 28px; font-weight: 700; margin: 0 0 10px; color: #fff; }
+.theme-sub { font-size: 15px; line-height: 1.5; margin: 0 0 24px; color: rgba(255,255,255,.85); }
+.theme-trust-list { list-style: none; margin: 0; padding: 0; }
+.theme-trust-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 14.5px;
+    color: rgba(255,255,255,.95);
+}
+.theme-trust-list i { color: #fff; font-size: 16px; }
+
 /* Header */
 .auth-header {
     text-align: center;
@@ -79,10 +196,10 @@ body {
     display: flex;
     width: 100%;
     max-width: 720px;
-    height: 56px;
+    height: 48px;
     border-radius: 999px;
     overflow: hidden;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
     box-shadow: 0 4px 14px rgba(11, 42, 91, 0.08);
 }
 .role-toggle .nav-link {
@@ -92,7 +209,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     border-radius: 0;
@@ -112,12 +229,7 @@ body {
 }
 
 /* Cards */
-.auth-cards {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
-}
+.auth-cards { width: 100%; }
 
 .auth-card {
     display: flex;
@@ -125,78 +237,6 @@ body {
     box-shadow: var(--card-shadow);
     overflow: hidden;
     min-height: 380px;
-}
-
-.auth-card .illustration {
-    flex: 0 0 40%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 32px;
-    overflow: hidden;
-}
-.auth-card.admin .illustration {
-    background: linear-gradient(135deg, var(--admin-accent) 0%, var(--admin-accent-2) 100%);
-}
-.auth-card.client .illustration {
-    background: linear-gradient(135deg, var(--client-accent-light) 0%, var(--client-accent-2) 100%);
-}
-
-.illustration-art {
-    position: relative;
-    width: 100%;
-    max-width: 220px;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.illustration-art .art-orb {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.16);
-}
-.illustration-art .art-orb.orb1 { width: 90px; height: 90px; top: 0; left: 4px; }
-.illustration-art .art-orb.orb2 { width: 46px; height: 46px; bottom: 6px; right: 0; background: rgba(255,255,255,.22); }
-.illustration-art .art-badge {
-    position: absolute;
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.22);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 18px;
-}
-.illustration-art .art-badge.b1 { top: 6px; right: 18px; }
-.illustration-art .art-badge.b2 { bottom: 30px; left: 4px; }
-.illustration-art .art-main {
-    width: 128px;
-    height: 128px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.14);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 56px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.25);
-}
-
-.trust-strip {
-    position: absolute;
-    left: 20px;
-    bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 500;
-    opacity: .95;
 }
 
 .auth-card .form-panel {
@@ -349,10 +389,10 @@ body {
 
 /* Responsive */
 @media (max-width: 900px) {
-    .auth-card { flex-direction: column; }
-    .auth-card .illustration { display: none; }
-    .auth-card .form-panel { flex: 1 1 100%; margin: 0; border-radius: 0; padding: 20px; }
-    .role-toggle { width: 100%; }
+    .login-shell { flex-direction: column; min-height: auto; }
+    .theme-panel { display: none; }
+    .form-side { padding: 32px 20px; }
+    .auth-card.compact .form-panel { padding: 20px; }
 }
 
 /* Register page reuses the card system, single column */

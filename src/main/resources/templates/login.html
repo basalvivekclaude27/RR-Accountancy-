@@ -2,155 +2,175 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/head :: head('Sign In')}"></head>
 <body>
-<div class="auth-shell">
+<div class="login-shell">
 
-    <div class="auth-header">
-        <h1>Welcome to R &amp; R Accountancy Services</h1>
-        <p>Please choose how you want to continue</p>
-    </div>
-
-    <div class="auth-alert error" th:if="${errorMessage}">
-        <i class="bi bi-exclamation-circle-fill"></i>
-        <span th:text="${errorMessage}">Error</span>
-    </div>
-    <div class="auth-alert info" th:if="${infoMessage}">
-        <i class="bi bi-check-circle-fill"></i>
-        <span th:text="${infoMessage}">Info</span>
-    </div>
-
-    <ul class="nav nav-pills role-toggle" role="tablist" aria-label="Choose login type">
-        <li class="nav-item flex-fill" role="presentation">
-            <button type="button" class="nav-link toggle-admin w-100"
-                    id="admin-tab" data-bs-toggle="pill" data-bs-target="#admin-card"
-                    role="tab" aria-controls="admin-card"
-                    th:classappend="${activeTab == 'admin'} ? 'active' : ''"
-                    th:attr="aria-selected=${activeTab == 'admin'}">
-                <i class="bi bi-person-fill"></i> Admin Login
-            </button>
-        </li>
-        <li class="nav-item flex-fill" role="presentation">
-            <button type="button" class="nav-link toggle-client w-100"
-                    id="client-tab" data-bs-toggle="pill" data-bs-target="#client-card"
-                    role="tab" aria-controls="client-card"
-                    th:classappend="${activeTab == 'client'} ? 'active' : ''"
-                    th:attr="aria-selected=${activeTab == 'client'}">
-                <i class="bi bi-person-fill"></i> Client Login
-            </button>
-        </li>
-    </ul>
-
-    <div class="tab-content auth-cards">
-
-        <!-- Admin card -->
-        <section class="auth-card admin tab-pane fade" th:classappend="${activeTab == 'admin'} ? 'show active' : ''"
-                  id="admin-card" role="tabpanel" aria-labelledby="admin-tab">
-            <div class="illustration">
-                <div class="illustration-art">
-                    <span class="art-orb orb1"></span>
-                    <span class="art-orb orb2"></span>
-                    <span class="art-badge b1"><i class="bi bi-gear-fill"></i></span>
-                    <span class="art-badge b2"><i class="bi bi-cpu-fill"></i></span>
-                    <span class="art-main"><i class="bi bi-shield-lock-fill"></i></span>
-                </div>
-                <div class="trust-strip"><i class="bi bi-shield-check"></i> Secure &bull; Private &bull; Protected</div>
+    <div class="theme-panel" th:attr="data-role=${activeTab}">
+        <div class="theme-content theme-admin">
+            <div class="theme-icon-cluster">
+                <span class="tic-orb orb1"></span>
+                <span class="tic-orb orb2"></span>
+                <span class="tic-badge b1"><i class="bi bi-bar-chart-fill"></i></span>
+                <span class="tic-badge b2"><i class="bi bi-gear-fill"></i></span>
+                <span class="tic-main"><i class="bi bi-shield-lock-fill"></i></span>
             </div>
-            <div class="form-panel">
-                <h2>Admin Login</h2>
-                <p class="form-sub">Secure access for administrators only</p>
+            <h2 class="theme-headline">Admin Control Center</h2>
+            <p class="theme-sub">Manage clients, jobs, and firm operations from one secure dashboard.</p>
+            <ul class="theme-trust-list">
+                <li><i class="bi bi-check-circle-fill"></i> Full Audit Trail</li>
+                <li><i class="bi bi-check-circle-fill"></i> Role-Based Access</li>
+                <li><i class="bi bi-check-circle-fill"></i> Encrypted Sessions</li>
+            </ul>
+        </div>
+        <div class="theme-content theme-client">
+            <div class="theme-icon-cluster">
+                <span class="tic-orb orb1"></span>
+                <span class="tic-orb orb2"></span>
+                <span class="tic-badge b1"><i class="bi bi-receipt"></i></span>
+                <span class="tic-badge b2"><i class="bi bi-graph-up-arrow"></i></span>
+                <span class="tic-main"><i class="bi bi-wallet2"></i></span>
+            </div>
+            <h2 class="theme-headline">Your Finances, Simplified</h2>
+            <p class="theme-sub">Track accounts, view reports, and stay on top of every deadline.</p>
+            <ul class="theme-trust-list">
+                <li><i class="bi bi-check-circle-fill"></i> Real-Time Reports</li>
+                <li><i class="bi bi-check-circle-fill"></i> Secure Document Vault</li>
+                <li><i class="bi bi-check-circle-fill"></i> Direct Accountant Support</li>
+            </ul>
+        </div>
+    </div>
 
-                <form th:action="@{/login}" method="post" novalidate>
-                    <input type="hidden" name="tab" value="admin"/>
+    <div class="form-side">
+        <div class="form-side-inner">
 
-                    <div class="field-group">
-                        <label for="admin-identifier">Email Address</label>
-                        <div class="field-wrap">
-                            <i class="bi bi-envelope-fill field-icon"></i>
-                            <input type="text" id="admin-identifier" name="identifier"
-                                   placeholder="Enter admin email" autocomplete="username" required/>
-                        </div>
-                    </div>
+            <div class="auth-header">
+                <h1>Welcome to R &amp; R Accountancy Services</h1>
+                <p>Please choose how you want to continue</p>
+            </div>
 
-                    <div class="field-group">
-                        <label for="admin-password">Password</label>
-                        <div class="field-wrap">
-                            <i class="bi bi-lock-fill field-icon"></i>
-                            <input type="password" id="admin-password" name="password"
-                                   placeholder="Enter password" autocomplete="current-password" required/>
-                            <button type="button" class="toggle-eye bi bi-eye" data-target="admin-password" aria-label="Show password"></button>
-                        </div>
-                    </div>
+            <div class="auth-alert error" th:if="${errorMessage}">
+                <i class="bi bi-exclamation-circle-fill"></i>
+                <span th:text="${errorMessage}">Error</span>
+            </div>
+            <div class="auth-alert info" th:if="${infoMessage}">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${infoMessage}">Info</span>
+            </div>
 
-                    <div class="row-between">
-                        <div class="remember-me">
-                            <input type="checkbox" id="admin-remember" name="remember-me" value="true" checked/>
-                            <label for="admin-remember">Remember Me</label>
-                        </div>
-                        <a th:href="@{/forgot-password}" class="forgot-link">Forgot Password?</a>
-                    </div>
-
-                    <button type="submit" class="btn-submit">
-                        Login as Admin <i class="bi bi-arrow-right"></i>
+            <ul class="nav nav-pills role-toggle" role="tablist" aria-label="Choose login type">
+                <li class="nav-item flex-fill" role="presentation">
+                    <button type="button" class="nav-link toggle-admin w-100"
+                            id="admin-tab" data-bs-toggle="pill" data-bs-target="#admin-card"
+                            role="tab" aria-controls="admin-card"
+                            th:classappend="${activeTab == 'admin'} ? 'active' : ''"
+                            th:attr="aria-selected=${activeTab == 'admin'}">
+                        <i class="bi bi-person-fill"></i> Admin Login
                     </button>
-                </form>
-            </div>
-        </section>
-
-        <!-- Client card -->
-        <section class="auth-card client tab-pane fade" th:classappend="${activeTab == 'client'} ? 'show active' : ''"
-                  id="client-card" role="tabpanel" aria-labelledby="client-tab">
-            <div class="illustration">
-                <div class="illustration-art">
-                    <span class="art-orb orb1"></span>
-                    <span class="art-orb orb2"></span>
-                    <span class="art-badge b1"><i class="bi bi-check-lg"></i></span>
-                    <span class="art-badge b2"><i class="bi bi-envelope-fill"></i></span>
-                    <span class="art-main"><i class="bi bi-person-workspace"></i></span>
-                </div>
-                <div class="trust-strip"><i class="bi bi-shield-check"></i> Your data is safe with us</div>
-            </div>
-            <div class="form-panel">
-                <h2>Client Login</h2>
-                <p class="form-sub">Access your account and manage your records</p>
-
-                <form th:action="@{/login}" method="post" novalidate>
-                    <input type="hidden" name="tab" value="client"/>
-
-                    <div class="field-group">
-                        <label for="client-identifier">Email Address</label>
-                        <div class="field-wrap">
-                            <i class="bi bi-envelope-fill field-icon"></i>
-                            <input type="text" id="client-identifier" name="identifier"
-                                   placeholder="Enter email address" autocomplete="username" required/>
-                        </div>
-                    </div>
-
-                    <div class="field-group">
-                        <label for="client-password">Password</label>
-                        <div class="field-wrap">
-                            <i class="bi bi-lock-fill field-icon"></i>
-                            <input type="password" id="client-password" name="password"
-                                   placeholder="Enter password" autocomplete="current-password" required/>
-                            <button type="button" class="toggle-eye bi bi-eye" data-target="client-password" aria-label="Show password"></button>
-                        </div>
-                    </div>
-
-                    <div class="row-between">
-                        <div class="remember-me">
-                            <input type="checkbox" id="client-remember" name="remember-me" value="true" checked/>
-                            <label for="client-remember">Remember Me</label>
-                        </div>
-                        <a th:href="@{/forgot-password}" class="forgot-link">Forgot Password?</a>
-                    </div>
-
-                    <button type="submit" class="btn-submit">
-                        Login as Client <i class="bi bi-arrow-right"></i>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <button type="button" class="nav-link toggle-client w-100"
+                            id="client-tab" data-bs-toggle="pill" data-bs-target="#client-card"
+                            role="tab" aria-controls="client-card"
+                            th:classappend="${activeTab == 'client'} ? 'active' : ''"
+                            th:attr="aria-selected=${activeTab == 'client'}">
+                        <i class="bi bi-person-fill"></i> Client Login
                     </button>
-                </form>
+                </li>
+            </ul>
 
-                <p class="form-footer">New Client? <a th:href="@{/register}">Register Here</a></p>
+            <div class="tab-content auth-cards">
+
+                <!-- Admin card -->
+                <section class="auth-card compact admin tab-pane fade" th:classappend="${activeTab == 'admin'} ? 'show active' : ''"
+                          id="admin-card" role="tabpanel" aria-labelledby="admin-tab">
+                    <div class="form-panel" style="flex:1 1 100%; margin:0;">
+                        <h2>Admin Login</h2>
+                        <p class="form-sub">Secure access for administrators only</p>
+
+                        <form th:action="@{/login}" method="post" novalidate>
+                            <input type="hidden" name="tab" value="admin"/>
+
+                            <div class="field-group">
+                                <label for="admin-identifier">Email Address</label>
+                                <div class="field-wrap">
+                                    <i class="bi bi-envelope-fill field-icon"></i>
+                                    <input type="text" id="admin-identifier" name="identifier"
+                                           placeholder="Enter admin email" autocomplete="username" required/>
+                                </div>
+                            </div>
+
+                            <div class="field-group">
+                                <label for="admin-password">Password</label>
+                                <div class="field-wrap">
+                                    <i class="bi bi-lock-fill field-icon"></i>
+                                    <input type="password" id="admin-password" name="password"
+                                           placeholder="Enter password" autocomplete="current-password" required/>
+                                    <button type="button" class="toggle-eye bi bi-eye" data-target="admin-password" aria-label="Show password"></button>
+                                </div>
+                            </div>
+
+                            <div class="row-between">
+                                <div class="remember-me">
+                                    <input type="checkbox" id="admin-remember" name="remember-me" value="true" checked/>
+                                    <label for="admin-remember">Remember Me</label>
+                                </div>
+                                <a th:href="@{/forgot-password}" class="forgot-link">Forgot Password?</a>
+                            </div>
+
+                            <button type="submit" class="btn-submit">
+                                Login as Admin <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Client card -->
+                <section class="auth-card compact client tab-pane fade" th:classappend="${activeTab == 'client'} ? 'show active' : ''"
+                          id="client-card" role="tabpanel" aria-labelledby="client-tab">
+                    <div class="form-panel" style="flex:1 1 100%; margin:0;">
+                        <h2>Client Login</h2>
+                        <p class="form-sub">Access your account and manage your records</p>
+
+                        <form th:action="@{/login}" method="post" novalidate>
+                            <input type="hidden" name="tab" value="client"/>
+
+                            <div class="field-group">
+                                <label for="client-identifier">Email Address</label>
+                                <div class="field-wrap">
+                                    <i class="bi bi-envelope-fill field-icon"></i>
+                                    <input type="text" id="client-identifier" name="identifier"
+                                           placeholder="Enter email address" autocomplete="username" required/>
+                                </div>
+                            </div>
+
+                            <div class="field-group">
+                                <label for="client-password">Password</label>
+                                <div class="field-wrap">
+                                    <i class="bi bi-lock-fill field-icon"></i>
+                                    <input type="password" id="client-password" name="password"
+                                           placeholder="Enter password" autocomplete="current-password" required/>
+                                    <button type="button" class="toggle-eye bi bi-eye" data-target="client-password" aria-label="Show password"></button>
+                                </div>
+                            </div>
+
+                            <div class="row-between">
+                                <div class="remember-me">
+                                    <input type="checkbox" id="client-remember" name="remember-me" value="true" checked/>
+                                    <label for="client-remember">Remember Me</label>
+                                </div>
+                                <a th:href="@{/forgot-password}" class="forgot-link">Forgot Password?</a>
+                            </div>
+
+                            <button type="submit" class="btn-submit">
+                                Login as Client <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </form>
+
+                        <p class="form-footer">New Client? <a th:href="@{/register}">Register Here</a></p>
+                    </div>
+                </section>
+
             </div>
-        </section>
-
+        </div>
     </div>
 </div>
 

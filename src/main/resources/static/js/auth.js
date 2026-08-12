@@ -12,4 +12,15 @@
             btn.classList.toggle('bi-eye-slash', !showing);
         });
     });
+
+    // Login page: sync the left theme panel to whichever role tab is active.
+    var themePanel = document.querySelector('.theme-panel');
+    if (themePanel) {
+        document.querySelectorAll('[data-bs-toggle="pill"]').forEach(function (btn) {
+            btn.addEventListener('shown.bs.tab', function (e) {
+                var role = e.target.id === 'admin-tab' ? 'admin' : 'client';
+                themePanel.setAttribute('data-role', role);
+            });
+        });
+    }
 })();
