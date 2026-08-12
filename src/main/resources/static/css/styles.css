@@ -85,7 +85,7 @@ body {
     margin-bottom: 28px;
     box-shadow: 0 4px 14px rgba(11, 42, 91, 0.08);
 }
-.role-toggle button {
+.role-toggle .nav-link {
     flex: 1 1 50%;
     border: none;
     display: flex;
@@ -95,21 +95,20 @@ body {
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
+    border-radius: 0;
+    background: var(--inactive-bg);
+    color: var(--inactive-text);
     transition: background-color .2s ease, color .2s ease;
 }
-.role-toggle button i { font-size: 18px; }
+.role-toggle .nav-link i { font-size: 18px; }
 
-.role-toggle .toggle-admin {
+.role-toggle .toggle-admin.active {
     background: var(--navy);
     color: #fff;
 }
-.role-toggle .toggle-client {
+.role-toggle .toggle-client.active {
     background: var(--client-accent);
     color: #fff;
-}
-.role-toggle button.is-inactive {
-    background: var(--inactive-bg) !important;
-    color: var(--inactive-text) !important;
 }
 
 /* Cards */
@@ -126,7 +125,6 @@ body {
     box-shadow: var(--card-shadow);
     overflow: hidden;
     min-height: 380px;
-    scroll-margin-top: 24px;
 }
 
 .auth-card .illustration {

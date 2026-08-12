@@ -1,23 +1,37 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/head :: head('Sign In')}"></head>
-<body>
-<div class="auth-shell">
+# Login Tab Toggle Implementation Plan
 
-    <div class="auth-header">
-        <h1>Welcome to R &amp; R Accountancy Services</h1>
-        <p>Please choose how you want to continue</p>
-    </div>
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-    <div class="auth-alert error" th:if="${errorMessage}">
-        <i class="bi bi-exclamation-circle-fill"></i>
-        <span th:text="${errorMessage}">Error</span>
-    </div>
-    <div class="auth-alert info" th:if="${infoMessage}">
-        <i class="bi bi-check-circle-fill"></i>
-        <span th:text="${infoMessage}">Info</span>
-    </div>
+**Goal:** Only one of Admin/Client login forms visible at a time, swapped via Bootstrap 5 native tabs.
 
+**Architecture:** Convert existing pill-toggle + stacked-cards markup in `login.html` into a Bootstrap `nav-pills` + `tab-content`/`tab-pane` pair. Bootstrap's `tab.js` (via `bootstrap.bundle.min.js`) owns the show/hide; CSS keeps current visual design but keys off `.active` instead of the old `.is-inactive` scheme. `auth.js` drops its now-dead scroll/toggle code.
+
+**Tech Stack:** Thymeleaf, Bootstrap 5.3.3 (webjar, CSS already included; JS bundle newly added to this page only), vanilla JS.
+
+## Global Constraints
+- Admin tab is the default active pane (matches `LoginController`'s `defaultValue = "admin"`).
+- No visual/style changes beyond what the tab-class swap requires — colors, spacing, illustration panels, field styling stay as-is.
+- No changes to `register.html`, `forgot-password.html`, or Spring Security config.
+- Reuse the existing `activeTab` model attribute already produced by `LoginController` (no controller change).
+
+---
+
+### Task 1: Convert login page to Bootstrap tab pattern
+
+**Files:**
+- Modify: `src/main/resources/templates/login.html`
+- Modify: `src/main/resources/static/css/styles.css`
+- Modify: `src/main/resources/static/js/auth.js`
+
+**Interfaces:**
+- Consumes: `activeTab` model attribute (`"admin"` | `"client"`) already set by `LoginController.loginPage()` (`src/main/java/com/rraccountancy/app/controller/LoginController.java:33`).
+- Produces: n/a (leaf template change, nothing downstream depends on new markup/class names).
+
+- [ ] **Step 1: Replace the toggle + cards markup with Bootstrap nav-pills/tab-content**
+
+In `src/main/resources/templates/login.html`, replace the block from `<div class="role-toggle" ...>` through the closing `</div>` of `.auth-cards` (lines 21–140) with:
+
+```html
     <ul class="nav nav-pills role-toggle" role="tablist" aria-label="Choose login type">
         <li class="nav-item flex-fill" role="presentation">
             <button type="button" class="nav-link toggle-admin w-100"
@@ -152,9 +166,110 @@
         </section>
 
     </div>
-</div>
+```
 
+Also add the Bootstrap JS bundle right before the existing `auth.js` script tag at the bottom of the file:
+
+```html
 <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/js/auth.js}"></script>
-</body>
-</html>
+```
+
+- [ ] **Step 2: Retarget the toggle/card CSS from `.is-inactive` to Bootstrap's `.active`**
+
+In `src/main/resources/static/css/styles.css`, replace the `/* Toggle */` block (current lines 77–113):
+
+```css
+/* Toggle */
+.role-toggle {
+    display: flex;
+    width: 100%;
+    max-width: 720px;
+    height: 56px;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 14px rgba(11, 42, 91, 0.08);
+}
+.role-toggle .nav-link {
+    flex: 1 1 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 0;
+    background: var(--inactive-bg);
+    color: var(--inactive-text);
+    transition: background-color .2s ease, color .2s ease;
+}
+.role-toggle .nav-link i { font-size: 18px; }
+
+.role-toggle .toggle-admin.active {
+    background: var(--navy);
+    color: #fff;
+}
+.role-toggle .toggle-client.active {
+    background: var(--client-accent);
+    color: #fff;
+}
+```
+
+Then find this line further down (currently around line 129):
+
+```css
+    scroll-margin-top: 24px;
+```
+
+Remove it — `scroll-margin-top` was only needed for the old `scrollIntoView` behavior, which is gone.
+
+- [ ] **Step 3: Remove dead toggle/scroll JS, keep the eye-toggle**
+
+Replace the full contents of `src/main/resources/static/js/auth.js` with:
+
+```javascript
+(function () {
+    'use strict';
+
+    // Password show/hide eye toggle
+    document.querySelectorAll('.toggle-eye').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var input = document.getElementById(btn.getAttribute('data-target'));
+            if (!input) return;
+            var showing = input.type === 'text';
+            input.type = showing ? 'password' : 'text';
+            btn.classList.toggle('bi-eye', showing);
+            btn.classList.toggle('bi-eye-slash', !showing);
+        });
+    });
+})();
+```
+
+- [ ] **Step 4: Build and manually verify**
+
+Run: `mvnw.cmd spring-boot:run` (or the project's existing run skill), open `http://localhost:8080/login`.
+
+Expected:
+- Only the Admin card is visible on load; Client card is not in the page flow (not just visually hidden — Bootstrap's `.fade`/`.show`/`.active` toggling means the inactive pane isn't rendered).
+- Clicking "Client Login" pill swaps to the Client card; Admin card disappears. Clicking back swaps again.
+- Password eye-toggle still works on both forms.
+- Submitting a bad Client login (`/login?error&tab=client`) reopens on the Client tab, not Admin.
+- Layout below 900px still collapses correctly (illustration panel hidden, full-width form).
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add src/main/resources/templates/login.html src/main/resources/static/css/styles.css src/main/resources/static/js/auth.js
+git commit -m "fix(login): show one login form at a time via Bootstrap tabs
+
+Admin/Client cards rendered stacked and both visible; toggle only
+re-colored the pills and scrolled. Switch to Bootstrap 5 nav-pills +
+tab-content so only the selected form renders, with native ARIA/keyboard
+support. Drop the now-dead scroll/toggle JS.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UAmCbJjQrNHTLD8UMHUCYH"
+```
